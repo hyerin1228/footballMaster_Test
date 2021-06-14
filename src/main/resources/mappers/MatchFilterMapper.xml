@@ -22,18 +22,17 @@
 	<!-- 매치 정보 가져오기 -->
     <select id="matchFilterList" parameterType="com.newdeal.footballMaster.model.MatchFilter"
         resultMap="matchMap">
-        SELECT match_date,
+        SELECT HOUR(match_date),
         	   IF(gender_rule='M', '남성', IF(gender_rule='F', '여성', '혼성')) AS gender_rule,
         	   IF(level='L', '일반 (Lv 1~5)', IF(level='M', '중급 (Lv 3~5)', '고급 (Lv 5)')) AS level,
         	   area,
         	   name
         FROM footballMaster.match m, field f
 		WHERE m.field_id = f.id
-		AND gender_rule = #{type}
-		AND level = #{level}
+		AND gender_rule IN #{gender_rule}
+		AND level IN #{level}
 		AND area = #{area}
-		AND <![CDATA[match_date >= #{day}]]>
-		AND <![CDATA[match_date < #{nextDay}]]>
+		AND match_date BETWEEN #{day}000000 AND #{day}235959
 		ORDER BY match_date; 
     </select>
 

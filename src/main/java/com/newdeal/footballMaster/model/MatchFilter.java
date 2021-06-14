@@ -11,6 +11,5 @@ public class MatchFilter {
 	private String gender_rule;		// 성별 룰
 	private String level;			// 선수 체급
 	private int day;				// 검색할 날짜
-	private int nextDay;			// 검색할 날짜 다음날
 	private int field_id;			// 필드 프라이머리 키
 }
