@@ -5,22 +5,28 @@
 	<mapper namespace="UserMapper">
 
     <!-- Beans 클래스의 객체이름(id)과 클래스이름(type)을 명시한다. -->
-    
     <resultMap id="userMap" type="com.newdeal.footballMaster.model.User">
 
     	<!-- Beans의 멤버변수(property)이름과 대상 테이블의 컬럼(column)을 연결한다. -->
         <result property="id" column="id" />
         <result property="email" column="email" />
-		<result property="pw" column="pw" />
+		<result property="type" column="type" />
 		
     </resultMap>
 	
-	<!-- 유저 정보 -->
+	<!-- 유저 정보 가져오기 -->
     <select id="selectUser" parameterType="com.newdeal.footballMaster.model.User"
         resultMap="userMap">
         SELECT id FROM user
 		WHERE email = #{email}; 
     </select>
+    
+    <!-- 유저 생성 -->
+	<insert id="createUser" parameterType="com.newdeal.footballMaster.model.User"
+	useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO user (email, type)
+		VALUES (#{email}, #{type});
+	</insert> 
 
  
 

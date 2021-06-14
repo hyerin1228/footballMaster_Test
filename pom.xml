@@ -145,14 +145,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.7</version>
-			<scope>test</scope>
-		</dependency> 
-		
-		<!-- Test -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
 			<version>4.13</version>
 			<scope>test</scope>
 		</dependency>  
@@ -205,6 +197,12 @@
 			<version>2.0.3</version>
 		</dependency>
 		
+		<!-- JWT --> 
+		<dependency> 
+			<groupId>io.jsonwebtoken</groupId> 
+			<artifactId>jjwt</artifactId> 
+			<version>0.9.1</version> 
+		</dependency>
 		
 	</dependencies>
     <build>
