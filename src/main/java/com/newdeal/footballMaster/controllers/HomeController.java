@@ -161,7 +161,37 @@ public class HomeController {
 			}
 		}
 		
-		input.setArea(area);
+		String setArea = "";
+		if (area.equals("서울")) {
+			setArea = "A";
+		} else if (area.equals("경기")) {
+			setArea = "B";
+		} else if (area.equals("인천")) {
+			setArea = "C";
+		} else if (area.equals("대전")) {
+			setArea = "D";
+		} else if (area.equals("대구")) {
+			setArea = "E";
+		} else if (area.equals("부산")) {
+			setArea = "F";
+		} else if (area.equals("울산")) {
+			setArea = "G";
+		} else if (area.equals("광주")) {
+			setArea = "H";
+		} else if (area.equals("충북")) {
+			setArea = "I";
+		} else if (area.equals("경북")) {
+			setArea = "J";
+		} else if (area.equals("전북")) {
+			setArea = "K";
+		} else if (area.equals("충남")) {
+			setArea = "L";
+		} else if (area.equals("경남")) {
+			setArea = "M";
+		}
+		
+		input.setArea(setArea);
+
 		
 		// day 값은 20210507 << 이런식으로 가져와야함 int값 째로 가져올거면 상위 리퀘스트 파람의 데이터 타입을 변경해야함
 		// 해당 값을 int로 받아오면 파싱하는 과정 필요 x
