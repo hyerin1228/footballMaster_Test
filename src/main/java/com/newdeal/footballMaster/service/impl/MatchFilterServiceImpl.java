@@ -25,4 +25,13 @@ public class MatchFilterServiceImpl implements MatchFilterService{
 		return result;
 	}
 
+	// 필터링한 지역 정보 가져오기
+	@Override
+	public List<String> getRegionFilter() {
+		List<String> result = sqlSession.selectList("MatchFilterMapper.regionFilterList");
+		return result;
+	}
+	
+
+
 }

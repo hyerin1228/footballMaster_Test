@@ -35,5 +35,12 @@
 		AND match_date BETWEEN #{day}000000 AND #{day}235959
 		ORDER BY match_date; 
     </select>
+    
+   <!--  SELECT area FROM `footballmaster`.`field`; -->
+    	<!-- 지역 정보 가져오기 -->
+    <select id="regionFilterList" resultType="java.lang.String">
+        SELECT area
+        FROM footballMaster.field
+    </select>
 
 </mapper>

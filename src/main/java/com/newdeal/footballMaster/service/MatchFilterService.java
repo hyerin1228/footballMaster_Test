@@ -8,5 +8,8 @@ public interface MatchFilterService {
 	
 	// 메인 화면 매치 필터 정보 뿌려주기
 	public List<MatchFilter> getMatchFilter(MatchFilter input);
+	
+	// 메인 화면 지역 필터 정보 뿌려주기
+	public List<String> getRegionFilter();
 
 }
