@@ -1,5 +1,6 @@
 package com.newdeal.footballMaster.controllers;
 
+import java.io.BufferedReader;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,9 +8,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.newdeal.footballMaster.model.MainBanner;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.newdeal.footballMaster.model.MatchFilter;
 import com.newdeal.footballMaster.model.User;
 import com.newdeal.footballMaster.service.MatchFilterService;
@@ -48,6 +52,64 @@ public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	
+	// json으로 받는지 test - 혜린
+	// 필요한 util이라고...
+	private String readJSONStringFromRequestBody(HttpServletRequest request){
+	    StringBuffer json = new StringBuffer();
+	    String line = null;
+	 
+	    try {
+	        BufferedReader reader = request.getReader();
+	        while((line = reader.readLine()) != null) {
+	            json.append(line);
+	        }
+	 
+	    }catch(Exception e) {
+	        System.out.println("Error reading JSON string: " + e.toString());
+	    }
+	    return json.toString();
+	}
+	
+	// test 매치상세페이지 이동 -혜린
+	@RequestMapping(value = "/mypageChangeTest", method = RequestMethod.POST)
+	public String mypageChangeTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+		logger.info("Welcome mypageChangeTest!");
+		
+		Gson gson = new Gson();
+	    //DataSet set = new DataSet();
+	    String json = readJSONStringFromRequestBody(request); 
+	    JSONObject jObj = new JSONObject(json);
+	    return gson.toJson(jObj);
+	    
+	}
+	
+	
+
+	
+	// test 매치상세페이지 이동 -혜린
+	@RequestMapping(value = "/mypageChange", method = RequestMethod.GET)
+	public String mypageChange() {
+		logger.info("Welcome mypageChange!");
+
+		return "mypageChange";
+	}
+	
+	// test 매치상세페이지 이동 -혜린
+	@RequestMapping(value = "/match", method = RequestMethod.GET)
+	public String match1() {
+		logger.info("Welcome match1!");
+
+		return "matchDetail2";
+	}
+	
+	// test 매치신청페이지로 이동 -혜린
+	@RequestMapping(value = "/matchApply.do", method = RequestMethod.GET)
+	public String matchApply() {
+		
+		logger.info("Welcome matchApply!");
+	
+		return "matchApply";
+	}
 	
 	
 	// test -혜린
