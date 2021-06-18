@@ -14,73 +14,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="carousel--container">
-                <ul class="carousel--wrapper slick-initialized slick-slider slick-dotted">
-                    <div class="slick-list draggable">
-                        <div class="slick-track"
-                            style="opacity: 1; width: 10384px; transform: translate3d(-1888px, 0px, 0px);">
-                            <li class="carousel--hero slick-slide slick-cloned" data-slick-index="-1" aria-hidden="true"
-                                tabindex="-1" style="width: 944px;"><a href="#" tabindex="-1">
-                                    <div class="carousel--img">
-                                        <img src="images/img1.gif" class="carousel--img_m">
-                                        <img src="images/img1.gif" class="carousel--img_pc">
-                                    </div>
-                                </a></li>
-                            <li class="carousel--hero slick-slide" data-slick-index="0" aria-hidden="true" tabindex="-1"
-                                role="tabpanel" id="slick-slide10" aria-describedby="slick-slide-control10"
-                                style="width: 944px;">
-                                <a href="#" tabindex="-1">
-                                    <div class="carousel--img">
-                                        <img src="images/img2.gif" class="carousel--img_m">
-                                        <img src="images/img2.gif" class="carousel--img_pc">
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="carousel--hero slick-slide slick-current slick-active" data-slick-index="1"
-                                aria-hidden="false" tabindex="0" role="tabpanel" id="slick-slide11"
-                                aria-describedby="slick-slide-control11" style="width: 944px;"><a href="#" tabindex="0">
-                                    <div class="carousel--img">
-                                        <img src="images/img3.gif" class="carousel--img_m">
-                                        <img src="images/img3.gif" class="carousel--img_pc">
-                                    </div>
-                                </a></li>
 
-                            <li class="carousel--hero slick-slide slick-cloned" data-slick-index="5" aria-hidden="true"
-                                tabindex="-1" style="width: 944px;"><a href="#" tabindex="-1">
-                                    <div class="carousel--img"><img src="images/img1.gif" class="carousel--img_m">
-                                        <img src="images/img1.gif" class="carousel--img_pc">
-                                    </div>
-                                </a></li>
-                            <li class="carousel--hero slick-slide slick-cloned" data-slick-index="6" aria-hidden="true"
-                                tabindex="-1" style="width: 944px;"><a href="#" tabindex="-1">
-                                    <div class="carousel--img"><img src="images/img2.gif" class="carousel--img_m">
-                                        <img src="images/img2.gif" class="carousel--img_pc">
-                                    </div>
-                                </a></li>
-                            <li class="carousel--hero slick-slide slick-cloned" data-slick-index="7" aria-hidden="true"
-                                tabindex="-1" style="width: 944px;"><a href="#" tabindex="-1">
-                                    <div class="carousel--img"><img src="images/img3.gif" class="carousel--img_m">
-                                        <img src="#" class="carousel--img_pc">
-                                    </div>
-                                </a></li>
-
-                        </div>
-                    </div>
-                    <ul class="slick-dots" style="" role="tablist">
-                        <li class="" role="presentation">
-                            <button type="button" role="tab" id="slick-slide-control10" aria-controls="slick-slide10"
-                                aria-label="1 of 3" tabindex="-1">1</button>
-                        </li>
-                        <li role="presentation" class="slick-active"><button type="button" role="tab"
-                                id="slick-slide-control11" aria-controls="slick-slide11" aria-label="2 of 3"
-                                tabindex="0" aria-selected="true">2</button>
-                        </li>
-                        <li role="presentation" class=""><button type="button" role="tab" id="slick-slide-control12"
-                                aria-controls="slick-slide12" aria-label="3 of 3" tabindex="-1">3</button>
-                        </li>
-                    </ul>
-                </ul>
-            </div> -->
             <!-- 메인 슬라이드 배너 -->
             <div class="carousel--container">
                 <ul class="carousel--wrapper">
@@ -137,7 +71,7 @@
                     </div>
                     <div class="main--match--filter">
                         <div class="filter--results">
-                            <p style=""><strong>111</strong>개의 매치</p>
+                            <p v-show="currentMatchesNum != 0"><strong>[[ currentMatchesNum ]]</strong>개의 매치</p>
                         </div>
                         <div class="filter--wrapper" id="modalBtn">
                             <!--<button type="button" id="modalBtn" class="btn btn-primary">매치</button>-->
@@ -150,29 +84,44 @@
                 <div class="list--match-schedule--container">
                     <ul>
                         <!---->
-                        <li class="list--match-schedule--item"><a>
+                        <li class="list--match-schedule--item" v-for="(match, index) in currentMatches" v-show="!isLoading" v-if="match.match_date < now" :class="{'hide': match.id == 53057}"><a>
+                                <!-- <a @click="goToMatch(match.id)"> -->
                                 <div class="list--match-schedule__time">
-                                    <p>10:00</p>
+                                    <p>[[ match.match_date ]] : 00</p>
                                 </div>
+                                
                                 <div class="list--match-schedule__info">
                                     <!---->
                                     <!---->
                                     <div class="match-list__title" onclick="location.href='http://localhost:8080/footballMaster/matches/detail'">
-                                        <h3>서초 스타 풋살장 A면</h3>
+                                        <h3>[[ match.name ]]</h3>
                                         <!---->
                                     </div>
-                                    <div class="label--match-option"><span class="match--option isMix">남녀모두</span>
-                                        <span>6vs6</span>
-                                        <span>3파전</span> <span>일반 (Lv 1~5)</span>
+                                    <div class="label--match-option">
+                                    	<span v-if="match.gender_rule == '남성'" class="match--option isMen">남성</span>
+                                    	<span v-else-if="match.gender_rule == '혼성' " class="match--option isMix">남녀모두</span>
+                                    	<span v-else-if="match.gender_rule == '여성'" class="match--option isWomen">여성</span>
+                                        
+                                        <span v-if="match.level == '일반 (Lv 1~5)'" class="match--option is_beginner">일반 (Lv 1~5)</span>
+	                                    <span v-else-if="match.level == '초급 (Lv 1~2)'" class="match--option is_beginner">초급 (Lv 1~2)</span>
+	                                    <span v-else-if="match.level == '중급 (Lv 3~5)'" class="match--option is_mid">중급 (Lv 3~5)</span>
                                         <!---->
                                         <!---->
                                         <!---->
                                     </div>
                                 </div>
                                 <div class="list--match-schedule__status">
-                                    <div class="match-status isFull">
-                                        <p>마감</p>
-                                    </div>
+                                    <div class="match-status isFull" v-if="now">
+		                                <p>마감</p>
+		                            </div>
+<!-- 		                            <div class="match-status isHurry" v-else-if="match.apply_status == 'hurry'">
+		                                <p>마감임박!</p>
+		                                
+		                            </div>
+		                            <div class="match-status isOpen" v-else-if="match.apply_status == 'available'">
+		                                <p>신청가능</p>
+		                                
+		                            </div> -->
                                 </div>
                             </a>
                             <!---->
@@ -181,104 +130,17 @@
                             <!---->
                             <!---->
                         </li>
-                        <li class="list--match-schedule--item"><a>
-                                <div class="list--match-schedule__time">
-                                    <p>10:00</p>
-                                </div>
-                                <div class="list--match-schedule__info">
-                                    <!---->
-                                    <!---->
-                                    <div class="match-list__title">
-                                        <h3>용산 아이파크몰 (6구장) *주차1자리*</h3>
-                                        <!---->
-                                    </div>
-                                    <div class="label--match-option"><span class="match--option isMen">남성</span>
-                                        <span>6vs6</span>
-                                        <span>매치</span> <span>일반 (Lv 1~5)</span>
-                                        <!---->
-                                        <!---->
-                                        <!---->
-                                    </div>
-                                </div>
-                                <div class="list--match-schedule__status">
-                                    <div class="match-status isFull">
-                                        <p>마감</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!---->
-                            <!---->
-                            <!---->
-                            <!---->
-                            <!---->
-                        </li>
-                        <li class="list--match-schedule--item"><a>
-                                <div class="list--match-schedule__time">
-                                    <p>10:00</p>
-                                </div>
-                                <div class="list--match-schedule__info">
-                                    <!---->
-                                    <!---->
-                                    <div class="match-list__title">
-                                        <h3>시흥 루프탑필드 (시흥 프리미엄 아울렛) </h3>
-                                        <!---->
-                                    </div>
-                                    <div class="label--match-option"><span class="match--option isMen">남성</span>
-                                        <span>6vs6</span>
-                                        <span>매치</span> <span>일반 (Lv 1~5)</span>
-                                        <!---->
-                                        <!---->
-                                        <!---->
-                                    </div>
-                                </div>
-                                <div class="list--match-schedule__status">
-                                    <div class="match-status isHurry">
-                                        <p>마감임박!</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!---->
-                            <!---->
-                            <!---->
-                            <!---->
-                            <!---->
-                        </li>
-                        <li class="list--match-schedule--item"><a>
-                                <div class="list--match-schedule__time">
-                                    <p>22:00</p>
-                                </div>
-                                <div class="list--match-schedule__info">
-                                    <!---->
-                                    <!---->
-                                    <div class="match-list__title">
-                                        <h3>고양 화전 드림 풋살장 B면</h3>
-                                        <!---->
-                                    </div>
-                                    <div class="label--match-option"><span class="match--option isMen">남성</span>
-                                        <span>6vs6</span>
-                                        <span>매치</span> <span>일반 (Lv 1~5)</span>
-                                        <!---->
-                                        <!---->
-                                        <!---->
-                                    </div>
-                                </div>
-                                <div class="list--match-schedule__status">
-                                    <div class="match-status isHurry">
-                                        <p>마감임박!</p>
-                                    </div>
-                                </div>
-                            </a>
-                            <!---->
-                            <!---->
-                            <!---->
-                            <!---->
-                            <!---->
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-        </div>
+                        <div class="list--match-schedule__noItem" v-if="currentMatchesNum == 0">
+		                    <h3>등록된 매치가 없습니다</h3>
+		                    <p>다른 날짜 혹은 다른 검색 조건을 적용해보세요 :)</p>
+		                </div>
+		                </ul>
+		                </div>
+		               </div>
+		               
+		                   <div class="list--bottom--banner--container">
+						    </div>
+		                
         <!-- 모달 팝업 -->
         <div class="modal" id="myModal" tabindex="-1" role="dialog" style="display: none;">
             <div class="modal-dialog">
@@ -336,12 +198,14 @@
                 </div>
             </div>
         </div>
+        </div>
 
         <script src="https://unpkg.com/vue/dist/vue.js"></script>
         <script src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
 
         <script type="text/javascript">
-            
+        	$.noConflict();
+        	
         	var currentDate = '';
             var is_first = false;
             currentDate = moment().format('YYYY-MM-D');
@@ -375,6 +239,7 @@
                     
                     isLoading: false,
                     isFullLoading: false,
+                    now: false,
                     mainBanners: [],    // 메인 슬라이드 배너
                     allRegions: [],
                     selectRegion: null,
@@ -547,6 +412,7 @@
                     fetchMatches(regionId) {
                         var v = this;
                         v.isLoading = true
+                        v.now = 25
                         if(regionId !== undefined) {
                             v.selectRegion = regionId
                         }
@@ -561,86 +427,67 @@
                         params.append('area', paramArea);
                         params.append('day', this.currentDate);
                         
+        				var paramArr1 = "&param=";
+        				var paramArea1 = "&area=";
+        				var paramDay1 = "&day=";
+        				// test - json 쿼리스트링 에러가 있는듯
+        				var paramArr2 = ['Male','Female','Mix','Low','Middle','High'];
+        				var paramArea2 = "A";
+        				var paramDay2 = "20210618";
+      					var match= [];
+        				
+        				var queryStr = paramArr1+paramArr2+paramArea1+paramArea2+paramDay1+paramDay2;
                         
-                		axios.get('http://localhost:8081/footballMaster/matches', {
-                        	headers: {
-                        	    'Access-Control-Allow-Origin' : '*'
-                        		},
-                			params: {
-                				param: ["Male","Female","Mix","Low","Middle","High"],
-                				area: "A",
-                				day: "20210617"
-                			}
-                		})
-                		.then(function(res) {
+        				axios.get('http://localhost:8081/footballMaster/matches?'+queryStr)
+        				.then(function(res) {
+        					console.log("---1---")
+        					console.log(res.data);
                             v.isLoading = false
-                            v.isFullLoading = false
-                            // v.fetchMainBanner()
+                            v.fetchMainBanner()
                             v.currentMatches = res.data
-							
-                            console.log("call fetchMatches!!")
-                            console.log(res.data);
+                            
+                            console.log("---2---")
+                            console.log(v.currentMatches)
                             
                             var a = 0
-//                            for(i = 0; i < v.currentMatches.results.length; i++) {
-//                                if(v.currentMatches.results[i].schedule > v.now) {
-//                                    a++
-//                                }
-//                            }
+                            for(i=0; i < v.currentMatches.length; i++){
+                            	console.log("["+i+"]");
+                            	console.log(v.currentMatches[i]);
+                            	console.log("[2 : " + v.currentMatches[i].match_date+"]");
+                            	if(v.currentMatches[i].match_date < v.now){
+                            		a++
+                            		console.log("a++:"+a)
+                            	}
+                            }
                             v.currentMatchesNum = a
-                            setTimeout(() => v.newStadiumToast = false, 2000);
                             v.runBounce = true
-                		})
-                		.catch(function() {
-                		})
-                	},
-                	
-                 // 날짜 슬라이드
-/*                     dataMatches: function (getDate, index) {
-                        this.currentDate = getDate
-                        this.fetchMatches()
-                        var beforeCurrent = this.matchDays.findIndex(i => i.is_current == true)
-
-                        this.matchDays[beforeCurrent].is_current = false
-                        this.matchDays[index].is_current = true
-                    }, */
-                    
+						})
+						.catch(function() {
+							
+						})
+ 
+                    },
                     getFilters() {
                         // this.typeSearch = document.getElementById("searchId").value
                         var paramCategory = "&params="
                         var paramArea = "&area="
                         var paramDay = "&day="
 	                    
-						//var paramDayOn = this.currentDate + ""
-                        
-                        // var regionValue = this.selectRegion
-                        
-                        // 카테고리 필터 적용하기 버튼을 누르면 실행될 필터.
-/*                         if (this.checkedParam.length === 0) {
-                        	paramCategory = ''
-                        }
-                        if (this.checkedRegion.length === 0) {
-                        	paramArea = ''
-                        } */
+                            $.ajax({
+                                url: "http://localhost:8081/footballMaster/matches?"+queryStr,
+                                type:"GET",
+                          	  	dataType: "json",
+                          	  	jsonp : "callback",
+                                success: function(data) {
+                              	// data = email에 해당하는 유저정보
+                                  console.log(data);
+                                
+                                },
+                                error:function(request, status, error){ console.log("실패");console.log(request)
+                                }
+                              });
 
-                        // var regionValue = this.selectRegion
-                        // if(this.checkedSex.length === 0) {
-                        //     paramSex = ''
-                        // }
-                        // if(this.checkedLevel.length === 0) {
-                        //     paramLevel = ''
-                        // }
-                        // if(this.checkedType.length === 0) {
-                        //     paramType = ''
-                        // }
-                        // if(this.selectRegion == null) {
-                        //     regionValue = 'me'
-                        // }
-                        // if(this.typeSearch == null || this.checkedLevel.length === 0) {
-                        //     paramSearch = ''
-                        // }
-
-                        return "?day=" + this.currentDate.toString() + paramCategory + paramCateOn + paramArea + paramAreaOn
+                        return "?day=" + this.currentDate.toString() + paramCategory + paramCateOn + paramArea
                     },
 
                 },
@@ -655,16 +502,20 @@
 
         </script>
 
-        <script>
-     	$.noConflict();
-            // $(document).ready(function () {
-				var currentMatches = "";
-				
-				
+        <script type="text/javascript">
+     		$.noConflict();
+             $(document).ready(function () {
+				var paramArr1 = "&param=";
+				var paramArea1 = "&area=";
+				var paramDay1 = "&day=";
 				// test - json 쿼리스트링 에러가 있는듯
-				var paramArr1 = ['Male','Female','Mix','Low','Middle','High'];
-				var paramArea1 = "A";
-				var paramDay1 = "20210617";
+				var paramArr2 = ['Male','Female','Mix','Low','Middle','High'];
+				var paramArea2 = "A";
+				var paramDay2 = "20210618";
+				
+				var queryStr = paramArr1+paramArr2+paramArea1+paramArea2+paramDay1+paramDay2;
+				
+				console.log(queryStr);
 				
 				//---test
 				
@@ -710,54 +561,18 @@
 					
                     
                      $.ajax({
-                        url: "http://localhost:8081/footballMaster/matches",
+                        url: "http://localhost:8081/footballMaster/matches?"+queryStr,
                         type:"GET",
-                  	  	dataType: "jsonp",
+                  	  	dataType: "json",
                   	  	jsonp : "callback",
-                        data: {
-                				"param" : paramArr1,
-                				"area" : paramArea1,
-                				"day" : paramDay1
-                        },
                         success: function(data) {
                       	// data = email에 해당하는 유저정보
                           console.log(data);
-/*                           console.log("유저이메일:" + result.email +", 유저이름:" + result.name +", 성별:" + result.gender + ", 휴대폰번호:" + result.phone_number);
-
-                          userEmail.innerText = result.email;
-                          userName.value = result.name;
-                          userSex.value = result.gender;
-                          userPhone.value = result.phone_number; */
-                          
-                  		
                         
                         },
                         error:function(request, status, error){ console.log("실패");console.log(request)
                         }
                       });
-                    
-/*                     axios.get('http://localhost:8081/footballMaster/matches', {
-                    	headers: {
-                    	    'Access-Control-Allow-Origin' : '*'
-                    		},
-            			params: {
-            				param: ["Male","Female","Mix","Low","Middle","High"],
-            				area: "A",
-            				day: "20210617"
-            			}
-            		})
-            		.then(function(res) {
-                        // v.fetchMainBanner()
-                        currentMatches = res.data
-						
-                        console.log("call fetchMatches!!")
-                        console.log(res.data);
-
-            		})
-            		.catch(function() {
-            		}) */
-
-                    	
                     
                 };
 
@@ -775,12 +590,8 @@
                     // $(".modal").css("max-width", "none");
                 };
 
-            /* }); */
+});
 
-        </script>
-        
-        <script>
-        
         </script>
 
         <!-- footer -->
