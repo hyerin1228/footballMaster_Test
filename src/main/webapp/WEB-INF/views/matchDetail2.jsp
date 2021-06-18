@@ -43,7 +43,8 @@
                     <div class="sectionWrap">
                         <div class="stadSec">
                             <div class="matchTime">
-                                <p>2021년 6월 16일 수요일 12:00</p>
+                                <p><a href="http://localhost:8080/footballMaster//matches//matchApply">2021년 6월 16일 수요일 12:00</a>
+                                </p>
                             </div>
                             <div class="matchPlace">
                                 <h1 class="txtH w700h"><a href="/stadium/27/matches/">용산 아이파크몰 (6구장)</a></h1>

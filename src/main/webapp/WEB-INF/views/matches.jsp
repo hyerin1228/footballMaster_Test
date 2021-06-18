@@ -157,7 +157,7 @@
                                 <div class="list--match-schedule__info">
                                     <!---->
                                     <!---->
-                                    <div class="match-list__title">
+                                    <div class="match-list__title" onclick="location.href='http://localhost:8080/footballMaster/matches/detail'">
                                         <h3>서초 스타 풋살장 A면</h3>
                                         <!---->
                                     </div>
@@ -562,7 +562,16 @@
                         params.append('day', this.currentDate);
                         
                         
-                		axios.post('/footballMaster/matchFilter.do', params)
+                		axios.get('http://localhost:8081/footballMaster/matches', {
+                        	headers: {
+                        	    'Access-Control-Allow-Origin' : '*'
+                        		},
+                			params: {
+                				param: ["Male","Female","Mix","Low","Middle","High"],
+                				area: "A",
+                				day: "20210617"
+                			}
+                		})
                 		.then(function(res) {
                             v.isLoading = false
                             v.isFullLoading = false
@@ -647,9 +656,18 @@
         </script>
 
         <script>
-    	$.noConflict();
-            $(document).ready(function () {
-
+     	$.noConflict();
+            // $(document).ready(function () {
+				var currentMatches = "";
+				
+				
+				// test - json 쿼리스트링 에러가 있는듯
+				var paramArr1 = ['Male','Female','Mix','Low','Middle','High'];
+				var paramArea1 = "A";
+				var paramDay1 = "20210617";
+				
+				//---test
+				
                 //모달창
                 modal = document.getElementById("myModal");
                 // 1. 모달 열기 버튼
@@ -689,7 +707,58 @@
                     });
                     // 체크된 저장리스트 출력
                     console.log(checkList);
+					
+                    
+                     $.ajax({
+                        url: "http://localhost:8081/footballMaster/matches",
+                        type:"GET",
+                  	  	dataType: "jsonp",
+                  	  	jsonp : "callback",
+                        data: {
+                				"param" : paramArr1,
+                				"area" : paramArea1,
+                				"day" : paramDay1
+                        },
+                        success: function(data) {
+                      	// data = email에 해당하는 유저정보
+                          console.log(data);
+/*                           console.log("유저이메일:" + result.email +", 유저이름:" + result.name +", 성별:" + result.gender + ", 휴대폰번호:" + result.phone_number);
 
+                          userEmail.innerText = result.email;
+                          userName.value = result.name;
+                          userSex.value = result.gender;
+                          userPhone.value = result.phone_number; */
+                          
+                  		
+                        
+                        },
+                        error:function(request, status, error){ console.log("실패");console.log(request)
+                        }
+                      });
+                    
+/*                     axios.get('http://localhost:8081/footballMaster/matches', {
+                    	headers: {
+                    	    'Access-Control-Allow-Origin' : '*'
+                    		},
+            			params: {
+            				param: ["Male","Female","Mix","Low","Middle","High"],
+            				area: "A",
+            				day: "20210617"
+            			}
+            		})
+            		.then(function(res) {
+                        // v.fetchMainBanner()
+                        currentMatches = res.data
+						
+                        console.log("call fetchMatches!!")
+                        console.log(res.data);
+
+            		})
+            		.catch(function() {
+            		}) */
+
+                    	
+                    
                 };
 
                 // login modal 열기
@@ -706,7 +775,7 @@
                     // $(".modal").css("max-width", "none");
                 };
 
-            });
+            /* }); */
 
         </script>
         

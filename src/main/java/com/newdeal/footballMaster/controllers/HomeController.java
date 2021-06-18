@@ -51,6 +51,38 @@ public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
+	// ---------------------
+	// 캐시 
+	
+	// 캐시 충전 페이지 조회
+	@RequestMapping(value = "mypage/cash/charge", method = RequestMethod.GET)
+	public String cashCharge() {
+		logger.info("Welcome cashCharge 조회!");
+		return "cash_charge";
+	}
+	
+	// ---------------------
+	// 마이페이지
+	
+	// *. 마이페이지조회(GET)-(/mypage)
+	@RequestMapping(value = "/mypage", method = RequestMethod.GET)
+	public String myPage() {
+		logger.info("Welcome myPage 조회!");
+		return "myPage";
+	}
+	
+	
+	// *. 마이페이지 -> 회원수정페이지조회(GET)-(/mypage/change) 
+	@RequestMapping(value = "/mypage/change", method = RequestMethod.GET)
+	public String mypageChange() {
+		logger.info("Welcome mypageChange 조회!");
+		return "mypage_change";
+	}
+
+	
+	// ----------------------------------
+	// match 페이지
+	
 	
 	// json으로 받는지 test - 혜린
 	// 필요한 util이라고...
@@ -86,26 +118,18 @@ public class HomeController {
 	
 
 	
-	// test 매치상세페이지 이동 -혜린
-	@RequestMapping(value = "/mypageChange", method = RequestMethod.GET)
-	public String mypageChange() {
-		logger.info("Welcome mypageChange!");
-
-		return "mypageChange";
-	}
 	
 	// test 매치상세페이지 이동 -혜린
-	@RequestMapping(value = "/match", method = RequestMethod.GET)
-	public String match1() {
-		logger.info("Welcome match1!");
+	@RequestMapping(value = "/matches/detail", method = RequestMethod.GET)
+	public String matchDetail() {
+		logger.info("Welcome matchDetail!");
 
 		return "matchDetail2";
 	}
 	
 	// test 매치신청페이지로 이동 -혜린
-	@RequestMapping(value = "/matchApply.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/matches//matchApply", method = RequestMethod.GET)
 	public String matchApply() {
-		
 		logger.info("Welcome matchApply!");
 	
 		return "matchApply";
@@ -113,11 +137,11 @@ public class HomeController {
 	
 	
 	// test -혜린
-	@RequestMapping(value = "/main", method = RequestMethod.GET)
-	public String main1() {
-		logger.info("Welcome main1!");
+	@RequestMapping(value = "/matches", method = RequestMethod.GET)
+	public String matches() {
+		logger.info("Welcome matches!");
 
-		return "index11_layout";
+		return "matches";
 	}
 	
 	//@CrossOrigin(origins = "http://127.0.0.1:5500")

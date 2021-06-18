@@ -134,7 +134,7 @@ select {
     <div class="contentWapper_acc">
         <div class="inner">
             <div class="headmMessage">
-                <h2>1000rudxo@naver.com</h2>
+                <h2 name="email">이메일</h2>
             </div>
             <form method="POST" action="file:///C:/mypage/change/profile" onsubmit="return checkSex()">
               <input type="hidden" name="csrfmiddlewaretoken" value="9tokaY1isfHdv">
@@ -183,8 +183,57 @@ select {
     </div> 
 </div>
 
-<script>	
+
+<script type="text/javascript">
+		
+		var result = "";
+
+    	// 이름 / 성별 / 휴대폰번호 / 환불계좌은행 / 환불계좌번호 / 환불계좌예금주
+    	var userEmail = document.getElementsByName("email")[0];
+    	var userName = document.getElementsByName("name")[0];
+		// 성별 - 1:남자 / 2:여자    	
+    	var userSex = document.getElementsByName("sex");
+    	var userPhone = document.getElementsByName("phone")[0];
+    	var userBank_cd = document.getElementsByName("bank_cd")[0];
+    	var userBank_no = document.getElementsByName("bank_no")[0];
+    	var userBank_owner = document.getElementsByName("bank_owner");
+		
+    	console.log(userName+","+userSex+","+userPhone+","+userBank_cd+","+userBank_no+","+userBank_owner);
+	
+    $.ajax({
+      crossOrigin: true,
+	  dataType: "json",
+      url: "http://localhost:8081/footballMaster/user",
+      data: {
+    	'email' : 'asdf@naver.com'
+      },
+      success: function(data) {
+    	// data = email에 해당하는 유저정보
+        result = data;
+        console.log(result);
+        console.log("유저이메일:" + result.email +", 유저이름:" + result.name +", 성별:" + result.gender + ", 휴대폰번호:" + result.phone_number);
+
+        userEmail.innerText = result.email;
+        userName.value = result.name;
+        userSex.value = result.gender;
+        userPhone.value = result.phone_number;
+        
+		
+      
+      },
+      error:function(request, status, error){ console.log("실패");
+      }
+    });
+      
+    
+</script>
+
+<script>
 $(document).ready(function () {
+	
+	// -------------------------
+	// user정보 가져와서 조회?..
+	
 	
 	// 회원정보수정 저장하기 버튼 클릭이벤트
     modalSubmitBtn = document.getElementById("btn_submit");

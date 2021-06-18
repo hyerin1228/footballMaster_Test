@@ -43,13 +43,16 @@
         <!-- modal -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+		<!-- crossOrigin js -->
+		<script type="text/javascript" src="http://localhost:8080/footballMaster/assets/js/jquery.ajax-cross-origin.min.js"></script>
+	
 
         <!-- 메인배너 슬라이더 -->
         <!-- css -->
-        <link rel="stylesheet" type="text/css" href="assets/css/styles1.css">
-        <link rel="stylesheet" type="text/css" href="assets/css/styles1623313680.css">
-        <script type="text/javascript" src="assets/js/moment.js"></script>
-        <script type="text/javascript" src="assets/js/moment-with-locales.js"></script>
+        <link rel="stylesheet" type="text/css" href="http://localhost:8080/footballMaster/assets/css/styles1.css">
+        <link rel="stylesheet" type="text/css" href="http://localhost:8080/footballMaster/assets/css/styles1623313680.css">
+        <script type="text/javascript" src="http://localhost:8080/footballMaster/assets/js/moment.js"></script>
+        <script type="text/javascript" src="http://localhost:8080/footballMaster/assets/js/moment-with-locales.js"></script>
         <!-- axios -->
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <!-- slick -->
@@ -58,7 +61,7 @@
         <!-- <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.js"></script>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
-
+	
         <script>
             (function (i, s, o, g, r, a, m) {
                 i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
@@ -93,7 +96,7 @@
             <div class="navbar" id="navbar-main">
                 <div class="navContainer home">
                     <div class="newLogo">
-                        <a href="/"><img src="https://plab-football.s3.amazonaws.com/static/img/logo.svg"
+                        <a href="http://localhost:8080/footballMaster/matches"><img src="https://plab-football.s3.amazonaws.com/static/img/logo.svg"
                                 alt="플랩풋볼"></a>
                     </div>
                     <div class="top--menu" id="userMenu">
@@ -104,11 +107,12 @@
                         </div>
 
                         <div id="sidebar-main-trigger" class="icon">
-                            <div class="moreIconWrap">
-                                <div class="moreIcon"></div>
-                                <div class="moreIcon"></div>
-                                <div class="moreIcon"></div>
-                            </div>
+                            <a href="http://localhost:8080/footballMaster/mypage">
+                            	<img src="http://localhost:8080/footballMaster/assets/img/icon/ic_my.svg"></a>
+<!--                             <div class="moreIconWrap">
+                                 <div class="moreIcon">
+                                	</div>
+                            </div> -->
                         </div>
 
                     </div>
