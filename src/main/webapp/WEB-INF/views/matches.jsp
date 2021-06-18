@@ -150,21 +150,21 @@
                             <p class="modal--title">카테고리</p>
                             <p class="modal--close" id="modalClose">취소</p>
                         </div>
-                        <div class="modal-body" ref="modalCategory">
+                        <div class="modal-body">
                             <div class="filter--region">
                                 <div class="filter--region--item">
                                     <ul class="filter--list">
                                         <h4>성별</h4>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="sex_m" value="1" ref="sex_m">
+                                            <input type="checkbox" class="filterCheck grey" id="sex_m" value="Male" v-model="checkedNames">
                                             <label for="sex_m" class="checkLabel">남성</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="sex_w" value="-1" ref="sex_w">
+                                            <input type="checkbox" class="filterCheck grey" id="sex_w" value="Female" v-model="checkedNames">
                                             <label for="sex_w" class="checkLabel">여성</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="sex_u" value="0" ref="sex_u">
+                                            <input type="checkbox" class="filterCheck grey" id="sex_u" value="Mix" v-model="checkedNames">
                                             <label for="sex_u" class="checkLabel">남녀 모두</label>
                                         </li>
                                     </ul>
@@ -173,15 +173,15 @@
                                         <h4>레벨</h4>
                                         <li>
                                             <input type="checkbox" class="filterCheck grey" id="level_beginner"
-                                                value="1" ref="level1">
+                                                value="Low" v-model="checkedNames">
                                             <label for="level_beginner" class="checkLabel">초급 (Lv 1~2)</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="level_mid" value="2" ref="level2">
+                                            <input type="checkbox" class="filterCheck grey" id="level_mid" value="Middle" v-model="checkedNames">
                                             <label for="level_mid" class="checkLabel">중급 (Lv 3~5)</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="level_every" value="0" ref="level3">
+                                            <input type="checkbox" class="filterCheck grey" id="level_every" value="High" v-model="checkedNames">
                                             <label for="level_every" class="checkLabel">일반 (Lv 1~5)</label>
                                         </li>
                                     </ul>
@@ -226,6 +226,7 @@
                 delimiters: ['[[', ']]'],
                 el: '#app',
                 data: {
+                	checkedNames: [],
                 	currentDate: '',  //현재 날짜
                     checkedSex: [],
                     checkedLevel: [],
@@ -377,14 +378,26 @@
                     	console.log(targetId);
                     	var selectReg = "";
 
+                    	// 1. 선택한 지역
                     	if(event == null){
                     		selectReg = "A"
+                    		this.selectRegion = "A"
                     	}else{
 	                    	var targetId = event.target.id;
                     		selectReg = targetId
+                    		this.selectRegion = targetId
                     	}
-                        
                     	console.log("선택한 지역 ["+selectReg+"]")
+						
+                    	// 2. 카테고리 & 레벨
+                    	
+                    	var paramCate = this.checkedNames;
+						if(paramCate == null){
+							paramCate = ["Male","Female","Mix","Low","Middle","High"]
+						}
+						
+						console.log("paramCate [" + paramCate + "]")
+                    	
                     	var v = this;
                         v.isLoading = true
                         v.now = 25
@@ -392,7 +405,7 @@
                         
                         // parameter 보내려면 post방식을 get방식으로 달아서 보낼 수 없음
                         // 필요한거 1.성별-레벨 /2.지역 /3.날짜
-						var paramCate = ["Male","Female","Mix","Low","Middle","High"]
+						//var paramCate = ["Male","Female","Mix","Low","Middle","High"]
                         var paramArea = "A"
                         
         				var paramArr1 = "&param=";
@@ -437,37 +450,105 @@
                     //-- 카테고리 필터 적용 이벤트.
                     fetchMatchesFilter(regionId,event){
                     	console.log("btn clicked !!!!")
-                    	var target = event.currentTarget
+                    	var target = this.selectRegion
+                    	
                     	
                     	// 선택된 카테고리 정보 담아둘 배열
-                    	var checkList = [];
-                    	// modal 카테고리 정보 가져오기 위해 모달 가져오기!
-                    	var modalCategory = this.$refs.modalCategory.children
-                    	console.log(modalCategory);
-						
-                    	var el = modalCategory.querySelectorAll('input:checkbox[class="filterCheck grey"]');
-                    	console.log(el);
+                    	var checkList = this.checkedNames;
+                    	// modal 카테고리, 체크된 정보 가져오기!
+                    	console.log("-----------");
+                    	console.log(checkList);
                     	
-                    	// 1. 클래스 이름이 filterCheck grey이고, input checkbox 인 애들 찾기
-                        modalCategory.find('input:checkbox[class="filterCheck grey"]').each(function () {
-                            // 체크된 true 의 id를 가져옴
-                            if (this.checked == true) {
-                                //console.log(this.id);
-                                //console.log(this.value);
-                                checkList.push(this.id);
+                    	
+
+                    	// 첫 로드 때 지역 기본값은 서울로 지정... 그 다음부터는 클릭한 곳으로..
+                    	console.log("regionid 찍히는지")
+                    	var selectReg = "";
+
+                    	// 1. 선택한 지역
+                    	if(target == null){
+                    		selectReg = "A"
+                    	}else{
+	                    	//var targetId = event.target.id;
+                    		selectReg = this.selectRegion
+                    	}
+                    	console.log("선택한 지역 ["+selectReg+"]")
+						
+                    	// 2. 카테고리 & 레벨
+                    	
+                    	var paramCate = this.checkedNames;
+						if(paramCate == null){
+							paramCate = ["Male","Female","Mix","Low","Middle","High"]
+						}
+						
+						console.log("paramCate [" + paramCate + "]")
+                    	
+                    	var v = this;
+                        v.isLoading = true
+                        v.now = 25
+                        
+                        
+                        // parameter 보내려면 post방식을 get방식으로 달아서 보낼 수 없음
+                        // 필요한거 1.성별-레벨 /2.지역 /3.날짜
+						//var paramCate = ["Male","Female","Mix","Low","Middle","High"]
+                        var paramArea = "A"
+                        
+        				var paramArr1 = "&param=";
+        				var paramArea1 = "&area=";
+        				var paramDay1 = "&day=";
+        				// test - json 쿼리스트링 에러가 있는듯
+        				var paramArr2 = ['Male','Female','Mix','Low','Middle','High'];
+        				var paramArea2 = selectReg
+        				var paramDay2 = this.currentDate
+        				
+        				var queryStr = paramArr1+paramCate+paramArea1+paramArea2+paramDay1+paramDay2;
+                        
+        				axios.get('http://localhost:8081/footballMaster/matches?'+queryStr)
+        				.then(function(res) {
+        					console.log("---1---")
+        					console.log(res.data);
+                            v.isLoading = false
+                            v.fetchMainBanner()
+                            v.currentMatches = res.data
+                            
+                            console.log("---2---")
+                            console.log(v.currentMatches)
+                            
+                            var a = 0
+                            for(i=0; i < v.currentMatches.length; i++){
+                            	console.log("["+i+"]");
+                            	console.log(v.currentMatches[i]);
+                            	console.log("[2 : " + v.currentMatches[i].match_date+"]");
+                            	if(v.currentMatches[i].match_date < v.now){
+                            		a++
+                            		console.log("a++:"+a)
+                            	}
                             }
-                        });
-                        // 체크된 저장리스트 출력
-                        console.log(checkList);
-                    
-                    
-                    
+                            v.currentMatchesNum = a
+                            v.runBounce = true
+						})
+						.catch(function() {
+							
+						})
+                    	
+                    	
                     },
                     getFilters() {
                         // this.typeSearch = document.getElementById("searchId").value
                         var paramCategory = "&params="
                         var paramArea = "&area="
                         var paramDay = "&day="
+                        
+                                
+                		var paramArr1 = "&param=";
+                		var paramArea1 = "&area=";
+                		var paramDay1 = "&day=";
+                		// test - json 쿼리스트링 에러가 있는듯
+                		var paramArr2 = ['Male','Female','Mix','Low','Middle','High'];
+               			var paramArea2 = selectReg
+              			var paramDay2 = this.currentDate
+                				
+              				var queryStr = paramArr1+paramArr2+paramArea1+paramArea2+paramDay1+paramDay2;
 	                    
                             $.ajax({
                                 url: "http://localhost:8081/footballMaster/matches?"+queryStr,
