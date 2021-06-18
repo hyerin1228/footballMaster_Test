@@ -37,7 +37,7 @@
                             <ul class="swipe-tab">
                                 <li v-for="(day, index) in matchDays" :key="day.id" class="dateWrap slick-slide"
                                     :class="{ isActive: day.is_current == true, 'slick-active': day.is_current == true, 'slick-slide': day.is_current == true, isSat: day.yoil == '토', isSun: day.yoil == '일' }"
-                                    @click="dateMatches(day.year+'-'+day.month+'-'+day.day, index)">
+                                    @click="dateMatches(day.year+day.month+day.day, index)">
                                     <p class="">[[ day.day ]]</p>
                                     <span class="">[[ day.yoil ]]</span>
                                 </li>
@@ -48,19 +48,19 @@
                 <div class="main__filter">
                     <div class="main__match-filter">
                         <ul>
-                            <li><a @click="fetchMatches('서울')" class="match-filter-item--active">서울</a></li>
-                            <li><a @click="fetchMatches('경기')">경기</a></li>
-                            <li><a @click="fetchMatches('인천')">인천</a></li>
-                            <li><a @click="fetchMatches('대전')">대전</a></li>
-                            <li><a @click="fetchMatches('대구')">대구</a></li>
-                            <li><a @click="fetchMatches('부산')">부산</a></li>
-                            <li><a @click="fetchMatches('울산')">울산</a></li>
-                            <li><a @click="fetchMatches('광주')">광주</a></li>
-                            <li><a @click="fetchMatches('충북')">충북</a></li>
-                            <li><a @click="fetchMatches('경북')">경북</a></li>
-                            <li><a @click="fetchMatches('전북')">전북</a></li>
-                            <li><a @click="fetchMatches('충남')">충남</a></li>
-                            <li><a @click="fetchMatches('경남')">경남</a></li>
+                            <li><a id="A" @click="fetchMatches('A',$event)" class="match-filter-item--active">서울</a></li>
+                            <li><a id="B" @click="fetchMatches('B',$event)" >경기</a></li>
+                            <li><a id="C" @click="fetchMatches('C',$event)" >인천</a></li>
+                            <li><a id="D" @click="fetchMatches('D',$event)" >대전</a></li>
+                            <li><a id="E" @click="fetchMatches('E',$event)" >대구</a></li>
+                            <li><a id="F" @click="fetchMatches('F',$event)" >부산</a></li>
+                            <li><a id="G" @click="fetchMatches('G',$event)" >울산</a></li>
+                            <li><a id="H" @click="fetchMatches('H',$event)" >광주</a></li>
+                            <li><a id="I" @click="fetchMatches('I',$event)" >충북</a></li>
+                            <li><a id="J" @click="fetchMatches('J',$event)" >경북</a></li>
+                            <li><a id="K" @click="fetchMatches('K',$event)" >전북</a></li>
+                            <li><a id="L" @click="fetchMatches('L',$event)" >충남</a></li>
+                            <li><a id="M" @click="fetchMatches('M',$event)" >경남</a></li>
                         </ul>
 <!--                         <ul v-if="runBounce">
                     
@@ -150,21 +150,21 @@
                             <p class="modal--title">카테고리</p>
                             <p class="modal--close" id="modalClose">취소</p>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" ref="modalCategory">
                             <div class="filter--region">
                                 <div class="filter--region--item">
                                     <ul class="filter--list">
                                         <h4>성별</h4>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="sex_m" value="1">
+                                            <input type="checkbox" class="filterCheck grey" id="sex_m" value="1" ref="sex_m">
                                             <label for="sex_m" class="checkLabel">남성</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="sex_w" value="-1">
+                                            <input type="checkbox" class="filterCheck grey" id="sex_w" value="-1" ref="sex_w">
                                             <label for="sex_w" class="checkLabel">여성</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="sex_u" value="0">
+                                            <input type="checkbox" class="filterCheck grey" id="sex_u" value="0" ref="sex_u">
                                             <label for="sex_u" class="checkLabel">남녀 모두</label>
                                         </li>
                                     </ul>
@@ -173,15 +173,15 @@
                                         <h4>레벨</h4>
                                         <li>
                                             <input type="checkbox" class="filterCheck grey" id="level_beginner"
-                                                value="1">
+                                                value="1" ref="level1">
                                             <label for="level_beginner" class="checkLabel">초급 (Lv 1~2)</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="level_mid" value="2">
+                                            <input type="checkbox" class="filterCheck grey" id="level_mid" value="2" ref="level2">
                                             <label for="level_mid" class="checkLabel">중급 (Lv 3~5)</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="level_every" value="0">
+                                            <input type="checkbox" class="filterCheck grey" id="level_every" value="0" ref="level3">
                                             <label for="level_every" class="checkLabel">일반 (Lv 1~5)</label>
                                         </li>
                                     </ul>
@@ -191,7 +191,7 @@
                         </div>
                         <div class="modal--bottom">
                             <div class="modal--button">
-                                <span class="btn full yellow lg" id="saveBtn" data-dismiss="modal">적용하기</span>
+                                <span class="btn full yellow lg" id="saveBtn" @click="fetchMatchesFilter('saveBtn',$event)" data-dismiss="modal">적용하기</span>
                             </div>
                         </div>
                     </div>
@@ -208,13 +208,13 @@
         	
         	var currentDate = '';
             var is_first = false;
-            currentDate = moment().format('YYYY-MM-D');
+            currentDate = moment().format('YYYYMMD');
             if (!currentDate) {
                 if (getCookie('currentDate') != null) {
                     currentDate = getCookie('currentDate')
                     delete_cookie('currentDate')
                 } else {
-                    currentDate = moment().format('YYYY-MM-D')
+                    currentDate = moment().format('YYYYMMD')
                 }
                 is_first = true;
          //        var filters = "?schedule="+currentDate+"&sex=1,0,-1&level=0,1,2&type=match,cup"
@@ -258,7 +258,7 @@
                         var weeks = ['일', '월', '화', '수', '목', '금', '토']
                         var yoil = weeks[addDate.weekday()]
                         var is_current = false
-                        if (this.currentDate == addDate.format('YYYY-MM-D')) { is_current = true }
+                        if (this.currentDate == addDate.format('YYYYMMD')) { is_current = true }
                         this.matchDays.push({
                             year: year,
                             month: month,
@@ -369,72 +369,39 @@
                         });
                     },
                     
-/*                     fetchRegion() {
-                        var v = this
-                        axios.post('http://localhost:8080/footballMaster/regionFilter.do', config)
-                        .then(function(res) {
+                    // 1번째로 실행됨 - 조건에 따른 매치 조회
+                    fetchMatches(regionId, event) {
+                    	
+                    	// 첫 로드 때 지역 기본값은 서울로 지정... 그 다음부터는 클릭한 곳으로..
+                    	console.log("regionid 찍히는지")
+                    	console.log(targetId);
+                    	var selectReg = "";
 
-                        	console.log("fetchRegion 호출!");
-                        	console.log(res.data);
-                        	
-                        	// 내가 선택한 지역 v.currentRegions
-                        	// 모든 리스트 allRegions
-                        	
-                        	v
-                            v.currentRegions = res.data
-
-                            
-                            for(i=0; i < v.currentRegions.length; i++) {
-                                var regionVal = v.currentRegions[i]
-                                v.allRegions.push(regionVal)
-                            }
-                            
-                            console.log(v.currentRegions)
-                            console.log("---------")
-                            console.log(v.allRegions)
-                            
-                             v.currentRegions.move(2,1)
-                            v.currentRegions.move(5,2)
-                            v.currentRegions.move(5,3)
-                            v.currentRegions.move(5,7)
-                            v.allRegions.move(2,1)
-                            v.allRegions.move(5,2)
-                            v.allRegions.move(5,3)
-                            v.allRegions.move(5,7)
-
-                            
-                        })
-                        .catch(function(err) {})
-                    },
-  */
-  
-                    // 1번째로 실행됨
-                    fetchMatches(regionId) {
-                        var v = this;
+                    	if(event == null){
+                    		selectReg = "A"
+                    	}else{
+	                    	var targetId = event.target.id;
+                    		selectReg = targetId
+                    	}
+                        
+                    	console.log("선택한 지역 ["+selectReg+"]")
+                    	var v = this;
                         v.isLoading = true
                         v.now = 25
-                        if(regionId !== undefined) {
-                            v.selectRegion = regionId
-                        }
+                        
                         
                         // parameter 보내려면 post방식을 get방식으로 달아서 보낼 수 없음
                         // 필요한거 1.성별-레벨 /2.지역 /3.날짜
 						var paramCate = ["Male","Female","Mix","Low","Middle","High"]
                         var paramArea = "A"
                         
-                        var params = new URLSearchParams();
-                        params.append('params', paramCate);
-                        params.append('area', paramArea);
-                        params.append('day', this.currentDate);
-                        
         				var paramArr1 = "&param=";
         				var paramArea1 = "&area=";
         				var paramDay1 = "&day=";
         				// test - json 쿼리스트링 에러가 있는듯
         				var paramArr2 = ['Male','Female','Mix','Low','Middle','High'];
-        				var paramArea2 = "A";
-        				var paramDay2 = "20210618";
-      					var match= [];
+        				var paramArea2 = selectReg
+        				var paramDay2 = this.currentDate
         				
         				var queryStr = paramArr1+paramArr2+paramArea1+paramArea2+paramDay1+paramDay2;
                         
@@ -467,6 +434,35 @@
 						})
  
                     },
+                    //-- 카테고리 필터 적용 이벤트.
+                    fetchMatchesFilter(regionId,event){
+                    	console.log("btn clicked !!!!")
+                    	var target = event.currentTarget
+                    	
+                    	// 선택된 카테고리 정보 담아둘 배열
+                    	var checkList = [];
+                    	// modal 카테고리 정보 가져오기 위해 모달 가져오기!
+                    	var modalCategory = this.$refs.modalCategory.children
+                    	console.log(modalCategory);
+						
+                    	var el = modalCategory.querySelectorAll('input:checkbox[class="filterCheck grey"]');
+                    	console.log(el);
+                    	
+                    	// 1. 클래스 이름이 filterCheck grey이고, input checkbox 인 애들 찾기
+                        modalCategory.find('input:checkbox[class="filterCheck grey"]').each(function () {
+                            // 체크된 true 의 id를 가져옴
+                            if (this.checked == true) {
+                                //console.log(this.id);
+                                //console.log(this.value);
+                                checkList.push(this.id);
+                            }
+                        });
+                        // 체크된 저장리스트 출력
+                        console.log(checkList);
+                    
+                    
+                    
+                    },
                     getFilters() {
                         // this.typeSearch = document.getElementById("searchId").value
                         var paramCategory = "&params="
@@ -489,6 +485,15 @@
 
                         return "?day=" + this.currentDate.toString() + paramCategory + paramCateOn + paramArea
                     },
+                    
+                    dateMatches: function(getDate, index) {
+						this.currentDate = getDate
+						this.fetchMatches()
+						var beforeCurrent = this.matchDays.findIndex(i=>i.is_current == true)
+
+		                this.matchDays[beforeCurrent].is_current = false
+		                this.matchDays[index].is_current = true
+					}
 
                 },
                 watch: {
@@ -540,6 +545,7 @@
                 };
 
                 // 3. 모달안 적용하기 버튼
+                /*
                 modalSubmitBtn.onclick = (e) => {
                     // 1.모달바디 가져오기
                     // 2.가져온 것들 중 input[checkbox] 체크된 내용 가져오기
@@ -559,7 +565,7 @@
                     // 체크된 저장리스트 출력
                     console.log(checkList);
 					
-                    
+                    /*
                      $.ajax({
                         url: "http://localhost:8081/footballMaster/matches?"+queryStr,
                         type:"GET",
@@ -573,8 +579,72 @@
                         error:function(request, status, error){ console.log("실패");console.log(request)
                         }
                       });
+                     
+                     //-------
+                     	
+                     	console.log("modalSubmitBtn clicked!!! regionid 찍히는지")
+                     	console.log(v.selectReg);
+                     
+                     var selReg = v.selectReg;
+                     
+                     	if(selReg == undefined){
+                     		selectReg = "A"
+                     	}
+                         
+                     	console.log("선택한 지역 ["+selectReg+"]")
+                     	var v = this;
+                         v.isLoading = true
+                         v.now = 25
+                         
+                         
+                         // parameter 보내려면 post방식을 get방식으로 달아서 보낼 수 없음
+                         // 필요한거 1.성별-레벨 /2.지역 /3.날짜
+ 						var paramCate = ["Male","Female","Mix","Low","Middle","High"]
+                         var paramArea = "A"
+                         
+         				var paramArr1 = "&param=";
+         				var paramArea1 = "&area=";
+         				var paramDay1 = "&day=";
+         				// test - json 쿼리스트링 에러가 있는듯
+         				var paramArr2 = ['Male','Female','Mix','Low','Middle','High'];
+         				var paramArea2 = selectReg
+         				var paramDay2 = this.currentDate
+         				
+         				var queryStr = paramArr1+paramArr2+paramArea1+paramArea2+paramDay1+paramDay2;
+                         
+         				axios.get('http://localhost:8081/footballMaster/matches?'+queryStr)
+         				.then(function(res) {
+         					console.log("---1---")
+         					console.log(res.data);
+                             v.isLoading = false
+                             v.fetchMainBanner()
+                             v.currentMatches = res.data
+                             
+                             console.log("---2---")
+                             console.log(v.currentMatches)
+                             
+                             var a = 0
+                             for(i=0; i < v.currentMatches.length; i++){
+                             	console.log("["+i+"]");
+                             	console.log(v.currentMatches[i]);
+                             	console.log("[2 : " + v.currentMatches[i].match_date+"]");
+                             	if(v.currentMatches[i].match_date < v.now){
+                             		a++
+                             		console.log("a++:"+a)
+                             	}
+                             }
+                             v.currentMatchesNum = a
+                             v.runBounce = true
+ 						})
+ 						.catch(function() {
+ 							
+ 						})
+  
+                     };
+                     
+                     */
                     
-                };
+                });
 
                 // login modal 열기
                 loginModalOpen = document.getElementById("modalLoginOpen");
@@ -590,7 +660,6 @@
                     // $(".modal").css("max-width", "none");
                 };
 
-});
 
         </script>
 
