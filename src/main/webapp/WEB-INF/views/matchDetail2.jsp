@@ -3,7 +3,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.8/dist/vue.js"></script>
 
-        <div class="content">
+        <div class="content" id="matchContent">
             <div class="contentHeroWrap">
                 <div id="stadMap" style="z-index: 0;">
                     <div class="sdso_pic_1" style="height: 100%;" id="map">
@@ -43,20 +43,20 @@
                     <div class="sectionWrap">
                         <div class="stadSec">
                             <div class="matchTime">
-                                <p><a href="http://localhost:8080/footballMaster//matches//matchApply">2021년 6월 16일 수요일 12:00</a>
+                                <p><a href="http://localhost:8080/footballMaster/matches/matchApply">{{currentMatch.match_date}}</a>
                                 </p>
                             </div>
                             <div class="matchPlace">
-                                <h1 class="txtH w700h"><a href="/stadium/27/matches/">용산 아이파크몰 (6구장)</a></h1>
+                                <h1 class="txtH w700h"><a href="/stadium/27/matches/">{{currentMatch.name}}</a></h1>
                                 <div class="wtgTool">
-                                    <p class="txt1">서울 용산구 한강대로23길 55</p>
+                                    <p class="txt1">{{currentMatch.place}}</p>
                                     <p class="txt1 w400h" id="toggleMap" onclick="showmap()">지도 보기</span>
                                 </div>
                             </div>
                             <div class="match-info__fee" id="matchDetailApp">
                                 <div class="matchFee">
                                     <span>참가비</span>
-                                    <p>10,000원</p>
+                                    <p> {{currentMatch.participation_fee}}원 </p>
                                 </div>
                             </div>
                         </div>
@@ -89,30 +89,80 @@
                             </div>
                             <div class="matchFeature">
                                 <ul>
-                                    <li>
+                                <!-- 매치룰 -->
+                                    <li v-if="currentMatch.man_to_man_rule == '3:3'">
+                                        <img src="https://plab-football.s3.amazonaws.com/static/img/ic_3vs3.svg"
+                                            alt="3vs3 매치">
+                                        <span class="txt2">3vs3 매치</span>
+                                    </li>
+                                    <li v-if="currentMatch.man_to_man_rule == '4:4'">
+                                        <img src="https://plab-football.s3.amazonaws.com/static/img/ic_4vs4.svg"
+                                            alt="4vs4 매치">
+                                        <span class="txt2">4vs4 매치</span>
+                                    </li>
+                                    <li v-if="currentMatch.man_to_man_rule == '5:5'">
+                                        <img src="https://plab-football.s3.amazonaws.com/static/img/ic_5vs5.svg"
+                                            alt="5vs5 매치">
+                                        <span class="txt2">5vs5 매치</span>
+                                    </li>
+                                    <li v-if="currentMatch.man_to_man_rule == '6:6'">
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_6vs6.svg"
                                             alt="6vs6 매치">
                                         <span class="txt2">6vs6 매치</span>
                                     </li>
-                                    <li>
+                                    <li v-if="currentMatch.man_to_man_rule == '7:7'">
+                                        <img src="https://plab-football.s3.amazonaws.com/static/img/ic_7vs7.svg"
+                                            alt="7vs7 매치">
+                                        <span class="txt2">7vs7 매치</span>
+                                    </li>
+                                <!-- 성별 룰 -->
+                                    <li v-if="currentMatch.gender_rule == '남성'">
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_male.svg"
                                             alt="남성매치">
                                         <span class="txt2">남성매치</span>
                                     </li>
-                                    <li>
+                                    <li v-if="currentMatch.gender_rule == '여성'">
+                                        <img src="https://plab-football.s3.amazonaws.com/static/img/ic_female.svg"
+                                            alt="여성매치">
+                                        <span class="txt2">여성매치</span>
+                                    </li>
+                                    <li v-if="currentMatch.gender_rule == '혼성'">
+                                        <img src="https://plab-football.s3.amazonaws.com/static/img/ic_mix.svg"
+                                            alt="혼성매치">
+                                        <span class="txt2">혼성매치</span>
+                                    </li>
+                                <!-- 레벨 룰 -->
+                                    <li v-if="currentMatch.level == '일반 (Lv 1~5)'">
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_every.svg"
                                             alt="일반">
                                         <span class="txt2">일반</span>
                                     </li>
-                                    <li>
+                                    <li v-if="currentMatch.level == '초급 (Lv 1~2)'">
+                                        <img src="https://plab-football.s3.amazonaws.com/static/img/ic_beginner.svg"
+                                            alt="초급">
+                                        <span class="txt2">초급</span>
+                                    </li>
+                                    <li v-if="currentMatch.level == '중급 (Lv 3~5)'">
+                                        <img src="https://plab-football.s3.amazonaws.com/static/img/ic_mid.svg"
+                                            alt="중급">
+                                        <span class="txt2">중급</span>
+                                    </li>
+                                 <!-- 신발 착용 룰 -->   
+                                    <li v-if="currentMatch.shose_rule == '풋살화'">
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_turf.svg"
                                             alt="풋살화">
                                         <span class="txt2">풋살화</span>
                                     </li>
+                                    <li v-if="currentMatch.shoes_rule == '모든 신발'">
+                                        <img src="https://plab-football.s3.amazonaws.com/static/img/ic_turf.svg"
+                                            alt="모든 신발">
+                                        <span class="txt2">모든 신발</span>
+                                    </li>
+                                 <!-- 최소인원/최대인원 -->
                                     <li>
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_minmax.svg"
                                             alt="10~16명">
-                                        <span class="txt2">10~16명</span>
+                                        <span class="txt2">{{currentMatch.min_people}}~{{currentMatch.max_people}}명</span>
                                     </li>
                                 </ul>
                             </div>
@@ -135,17 +185,15 @@
                                     <li>
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_size.svg"
                                             alt="경기장 크기">
-                                        <span class="txt2">19x40m</span>
+                                        <span class="txt2">{{currentMatch.size}}</span>
                                     </li>
-                                    <li class="noFeature">
+                                    <li :class="{'noFeature': currentMatch.shower_room == '없음'}">
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_shower.svg"
                                             alt="샤워장">
                                         <span class="txt2">샤워장</span>
 
                                     </li>
-                                    <li class="">
-
-
+                                    <li :class="{'noFeature': currentMatch.park == '없음'}">
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_parking_pay.svg"
                                             alt="유료주차">
                                         <span class="txt2">유료주차</span>
@@ -153,12 +201,12 @@
 
 
                                     </li>
-                                    <li class="noFeature">
+                                    <li :class="{'noFeature': currentMatch.shose_rent == '불가능'}">
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_rentalshoes.svg"
                                             alt="풋살화 대여">
                                         <span class="txt2">풋살화 대여</span>
                                     </li>
-                                    <li class="noFeature">
+                                    <li :class="{'noFeature': currentMatch.clothes_rent == '불가능'}">
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_rentalwear.svg"
                                             alt="운동복 대여">
                                         <span class="txt2">운동복 대여</span>
@@ -206,16 +254,16 @@
                                 </div>
                                 <div class="profID">
                                     <span class="txt2">매니저</span>
-                                    <p class="txt5">김부활</p>
+                                    <p class="txt5">{{currentMatch.manager_name}}</p>
                                 </div>
                             </div>
                             <div class="mngDesc">
                                 <p class="txt2">
-                                    안녕하세요~ 김부활 매니저입니다??
+                                    안녕하세요~ {{currentMatch.manager_name}} 매니저입니다??
                                     2시간동안 다툼 및 부상 없이, 즐겁게 플레이 해요?
                                 </p>
                                 <div class="applyMng">
-                                    <a href="/manager/apply/">플랩풋볼 매니저에 대해 알아보기</a>
+                                    <a href="/manager/apply/">{{currentMatch.manager_name}} 매니저에 대해 알아보기</a>
                                 </div>
                             </div>
                         </div>
@@ -273,10 +321,10 @@
                             </div>
                         </div>
                         <div class="stadSec">
-                            <a href="/?stadium=27" class="txt5 w700h ib">용산 아이파크몰</a>
+                            <a href="/" class="txt5 w700h ib">{{currentMatch.name}}</a>
                             <p class="txt5 ib">에서는</p>
                             <p class="txt5">더 많은 경기가 열리고 있습니다</p>
-                            <a href="/stadium/27/matches/" class="jumpIn">용산 아이파크몰 스케쥴 보기</a>
+                            <a href="/matches/" class="jumpIn">{{currentMatch.name}} 스케쥴 보기</a>
                         </div>
 
                     </div>
@@ -296,24 +344,79 @@
                 </div>
             </div>
 
+</div>
+
+<script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+<script src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+<script src="https://plab-football.s3.amazonaws.com/static/slick/slick.min.js"></script>
+
 <script type="text/javascript">
     var _0x61fd=['stickyMnNav','block','navbar-main','parent','href','style','scrollTop','addClass','offsetTop','add','getElementById','noFixed','animate','click','length','end','scroll','40px','stickyTop','remove','display','[href=\x27#','classList','none','.contentHero','filter','attr','map','find','mnActive','stop','preventDefault','outerHeight','plabContainer','top'];(function(_0x281a83,_0x61fd40){var _0x24b10e=function(_0x3eb528){while(--_0x3eb528){_0x281a83['push'](_0x281a83['shift']());}};_0x24b10e(++_0x61fd40);}(_0x61fd,0x10c));var _0x24b1=function(_0x281a83,_0x61fd40){_0x281a83=_0x281a83-0x0;var _0x24b10e=_0x61fd[_0x281a83];return _0x24b10e;};var matchNav=document[_0x24b1('0x16')](_0x24b1('0xe')),matchContainer=document[_0x24b1('0x16')](_0x24b1('0xa'));matchNav[_0x24b1('0x22')][_0x24b1('0x15')](_0x24b1('0x17')),matchContainer[_0x24b1('0x22')][_0x24b1('0x15')](_0x24b1('0x1e')),window['onscroll']=function(){showMnNav();};var mnHeader=document[_0x24b1('0x16')]('mnNav'),sticky=mnHeader[_0x24b1('0x14')];function showMnNav(){document['body'][_0x24b1('0x12')]>0x12c||document['documentElement'][_0x24b1('0x12')]>0x12c?(mnHeader[_0x24b1('0x22')][_0x24b1('0x15')](_0x24b1('0xc')),mnHeader[_0x24b1('0x11')][_0x24b1('0x20')]=_0x24b1('0xd')):(mnHeader[_0x24b1('0x22')][_0x24b1('0x1f')]('stickyMnNav'),mnHeader[_0x24b1('0x11')][_0x24b1('0x20')]=_0x24b1('0x0'));}var lastId,topMenu=$('#mnNav'),topMenuHeight=topMenu[_0x24b1('0x9')]()+0xf,menuItems=topMenu[_0x24b1('0x5')]('a'),scrollItems=menuItems[_0x24b1('0x4')](function(){var _0x541f12=$($(this)[_0x24b1('0x3')](_0x24b1('0x10')));if(_0x541f12['length'])return _0x541f12;});menuItems[_0x24b1('0x19')](function(_0x185169){var _0x23841d=$(this)[_0x24b1('0x3')](_0x24b1('0x10')),_0x4a9f17=_0x23841d==='#'?0x0:$(_0x23841d)['offset']()[_0x24b1('0xb')]-topMenuHeight+0x1;$('html,\x20body')[_0x24b1('0x7')]()[_0x24b1('0x18')]({'scrollTop':_0x4a9f17},0x12c),_0x185169[_0x24b1('0x8')]();}),$(window)[_0x24b1('0x1c')](function(){var _0x7cc61c=$(this)[_0x24b1('0x12')]()+topMenuHeight,_0x3015ec=scrollItems[_0x24b1('0x4')](function(){if($(this)['offset']()[_0x24b1('0xb')]<_0x7cc61c)return this;});_0x3015ec=_0x3015ec[_0x3015ec[_0x24b1('0x1a')]-0x1];var _0x449522=_0x3015ec&&_0x3015ec['length']?_0x3015ec[0x0]['id']:'';lastId!==_0x449522&&(lastId=_0x449522,menuItems[_0x24b1('0xf')]()['removeClass'](_0x24b1('0x6'))[_0x24b1('0x1b')]()[_0x24b1('0x2')](_0x24b1('0x21')+_0x449522+'\x27]')[_0x24b1('0xf')]()[_0x24b1('0x13')](_0x24b1('0x6')));}),$(_0x24b1('0x1'))['slick']({'dots':!![],'slidesToShow':0x1,'arrows':![],'autoplay':!![],'responsive':[{'breakpoint':0x300,'settings':{'arrows':![],'centerPadding':_0x24b1('0x1d'),'slidesToShow':0x1}},{'breakpoint':0x1e0,'settings':{'arrows':![],'centerPadding':_0x24b1('0x1d'),'slidesToShow':0x1}}]});
 
 </script>
 
-<script src="https://plab-football.s3.amazonaws.com/static/slick/slick.min.js"></script>
-<script>
 
-	// 구장 사진 슬라이드 설정
-	$('.contentHero').slick({
-	    dots: true,
-	    slidesToShow: 1,
-	    arrows: false,
-	    fade: true,
-	    infinite: true,
-	    autoplay: true
-	  });
+<script type="text/javascript">
+$.noConflict();
+
+// -------------------------
+// 1. 현재 파라미터로 넘어온 매치 id 구하기
+var paramStr = window.location.href
+console.log("param["+paramStr+"]");
+//var matchId = paramStr.substring(0,paramStr.indexOf("matches/",0)); //-matches/ 이후 문자열 제거
+const matchId = paramStr.split('/').reverse()[0]; // '/'로 나누어진 마지막 문자 얻어오기
+console.log("matchId["+matchId+"]");
+
+
+var matchDetail = new Vue({
+	el: '#matchContent',
+	data: {
+		currentMatch: []	// 가져온 매치 정보
+		
+	},
+	created: function() {
+		// 이 페이지가 로드될때 실행될 작업
+		
+		this.fetchMatch()
+		this.swipeMainBanner()
+	},
+	methods:{
+		// 처음 로드될시 파라미터로 전달된 매치id값을 통해 매치정보 가져오기
+		fetchMatch(){
+			var v = this
+			
+			axios.get('http://localhost:8081/footballMaster/matches/'+matchId, config)
+            .then(function (res) {
+                console.log("매치정보 가져와주세용용")
+                console.log(res.data)
+                // 가져온 매치 정보 변수에 담기
+                v.currentMatch= res.data
+                //console.log(v.currentMatches);
+                //this.$set(this.currentMatch, res.data)
+                console.log(v.currentMatch)
+                
+            })
+            .catch(function (err) { })
+		},
+		swipeMainBanner(){
+			$(document).ready(function () {
+				// 구장 사진 슬라이드 설정
+				$('.contentHero').slick({
+				    dots: true,
+				    slidesToShow: 1,
+				    arrows: false,
+				    fade: true,
+				    infinite: true,
+				    autoplay: true
+				  });
+			});
+			
+		}
+	}
 	
+});
+
+
 </script>
 
             <!-- footer -->

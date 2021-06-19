@@ -84,8 +84,8 @@
                 <div class="list--match-schedule--container">
                     <ul>
                         <!---->
-                        <li class="list--match-schedule--item" v-for="(match, index) in currentMatches" v-show="!isLoading" v-if="match.match_date < now" :class="{'hide': match.id == 53057}"><a>
-                                <!-- <a @click="goToMatch(match.id)"> -->
+                        <li class="list--match-schedule--item" v-for="(match, index) in currentMatches" v-show="!isLoading" v-if="match.match_date < now" :class="{'hide': match.id == 53057}">
+                                <a @click="goToMatch(match.id)">
                                 <div class="list--match-schedule__time">
                                     <p>[[ match.match_date ]] : 00</p>
                                 </div>
@@ -574,7 +574,15 @@
 
 		                this.matchDays[beforeCurrent].is_current = false
 		                this.matchDays[index].is_current = true
-					}
+					},
+                    goToMatch(matchId){
+                    	// goToMatch -> 매치 리스트에서  해당하는 매치의 상세페이지로 이동할 url 만들어주는 함수
+                    	console.log("goToMatch Clicked!!!")
+                    	console.log(matchId)
+                    	document.cookie = "currentDate="+this.currentDate
+                    	var url = "/footballMaster/matches/";
+                    	document.location.href = url+matchId
+                    },
 
                 },
                 watch: {

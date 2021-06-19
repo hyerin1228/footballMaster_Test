@@ -3,7 +3,7 @@ package com.newdeal.footballMaster.model;
 import lombok.Data;
 
 @Data
-public class Field {
+public class Fields {
 	private int id;						// 구장 프라이머리 키
 	private String name;				// 구장 이름
 	private String place;				// 구장 장소

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,18 +22,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.newdeal.footballMaster.model.MainBanner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.newdeal.footballMaster.model.MatchFilter;
-import com.newdeal.footballMaster.model.User;
-import com.newdeal.footballMaster.service.MatchFilterService;
-import com.newdeal.footballMaster.service.UserService;
+import com.newdeal.footballMaster.model.MainBanner;
+import com.newdeal.footballMaster.model.Users;
 
 //import lombok.extern.slf4j.Slf4j;
 
@@ -44,10 +43,7 @@ import com.newdeal.footballMaster.service.UserService;
 public class HomeController {
 	
 	@Autowired
-	UserService userService;
-	
-	@Autowired
-	MatchFilterService matchFilterService;
+	SqlSession sqlSession;
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
@@ -102,7 +98,7 @@ public class HomeController {
 	    return json.toString();
 	}
 	
-	// test 매치상세페이지 이동 -혜린
+	// test 회원수정페이지 -혜린
 	@RequestMapping(value = "/mypageChangeTest", method = RequestMethod.POST)
 	public String mypageChangeTest(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
 		logger.info("Welcome mypageChangeTest!");
@@ -120,9 +116,10 @@ public class HomeController {
 	
 	
 	// test 매치상세페이지 이동 -혜린
-	@RequestMapping(value = "/matches/detail", method = RequestMethod.GET)
-	public String matchDetail() {
+	@RequestMapping(value = "/matches/{matchId}", method = RequestMethod.GET)
+	public String matchDetail(@PathVariable String matchId) {
 		logger.info("Welcome matchDetail!");
+		logger.info("matchId ["+matchId+"]");
 
 		return "matchDetail2";
 	}
@@ -199,84 +196,84 @@ public class HomeController {
         return list;
     }
 	
-	/* 지역 필터 ajax Test - 혜린 */ 
-	@ResponseBody
-	@RequestMapping(value="regionFilter.do", method=RequestMethod.POST)
-	public List<String> regionFilter(Model result, HttpServletResponse response, HttpSession session) {
-	//public List<String> regionFilter(Model result, HttpServletResponse response, HttpSession session) {
-		System.out.println("POST regionFilter");
-		
-		List<String> beforeOutput = matchFilterService.getRegionFilter();
-		List<String> afterOutput = new ArrayList<String>();
-		
-		
-		System.out.println("before----"+beforeOutput);
-		
-		for(String i : beforeOutput) {
-			System.out.println("before----"+i);
-			if (i.equals("A")) {
-				i = "서울";
-			} else if (i.equals("B")) {
-				i = "경기";
-			} else if (i.equals("C")) {
-				i = "인천";
-			} else if (i.equals("D")) {
-				i = "대전";
-			} else if (i.equals("E")) {
-				i = "대구";
-			} else if (i.equals("F")) {
-				i = "부산";
-			} else if (i.equals("G")) {
-				i = "울산";
-			} else if (i.equals("H")) {
-				i = "광주";
-			} else if (i.equals("I")) {
-				i = "충북";
-			} else if (i.equals("J")) {
-				i = "경북";
-			} else if (i.equals("K")) {
-				i = "전북";
-			} else if (i.equals("L")) {
-				i = "충남";
-			} else if (i.equals("M")) {
-				i = "경남";
-			}
-			afterOutput.add(i);
-			System.out.println("after----"+i);
-		}
-		
-//		if (area.equals("서울")) {
-//			setArea = "A";
-//		} else if (area.equals("경기")) {
-//			setArea = "B";
-//		} else if (area.equals("인천")) {
-//			setArea = "C";
-//		} else if (area.equals("대전")) {
-//			setArea = "D";
-//		} else if (area.equals("대구")) {
-//			setArea = "E";
-//		} else if (area.equals("부산")) {
-//			setArea = "F";
-//		} else if (area.equals("울산")) {
-//			setArea = "G";
-//		} else if (area.equals("광주")) {
-//			setArea = "H";
-//		} else if (area.equals("충북")) {
-//			setArea = "I";
-//		} else if (area.equals("경북")) {
-//			setArea = "J";
-//		} else if (area.equals("전북")) {
-//			setArea = "K";
-//		} else if (area.equals("충남")) {
-//			setArea = "L";
-//		} else if (area.equals("경남")) {
-//			setArea = "M";
+	/* 지역 필터 ajax Test - 혜린
+//	@ResponseBody
+//	@RequestMapping(value="regionFilter.do", method=RequestMethod.POST)
+//	public List<String> regionFilter(Model result, HttpServletResponse response, HttpSession session) {
+//	//public List<String> regionFilter(Model result, HttpServletResponse response, HttpSession session) {
+//		System.out.println("POST regionFilter");
+//		
+//		List<String> beforeOutput = matchFilterService.getRegionFilter();
+//		List<String> afterOutput = new ArrayList<String>();
+//		
+//		
+//		System.out.println("before----"+beforeOutput);
+//		
+//		for(String i : beforeOutput) {
+//			System.out.println("before----"+i);
+//			if (i.equals("A")) {
+//				i = "서울";
+//			} else if (i.equals("B")) {
+//				i = "경기";
+//			} else if (i.equals("C")) {
+//				i = "인천";
+//			} else if (i.equals("D")) {
+//				i = "대전";
+//			} else if (i.equals("E")) {
+//				i = "대구";
+//			} else if (i.equals("F")) {
+//				i = "부산";
+//			} else if (i.equals("G")) {
+//				i = "울산";
+//			} else if (i.equals("H")) {
+//				i = "광주";
+//			} else if (i.equals("I")) {
+//				i = "충북";
+//			} else if (i.equals("J")) {
+//				i = "경북";
+//			} else if (i.equals("K")) {
+//				i = "전북";
+//			} else if (i.equals("L")) {
+//				i = "충남";
+//			} else if (i.equals("M")) {
+//				i = "경남";
+//			}
+//			afterOutput.add(i);
+//			System.out.println("after----"+i);
 //		}
-		
-		System.out.println("after----"+afterOutput);
-		
-		return afterOutput;
-	}
+//		
+////		if (area.equals("서울")) {
+////			setArea = "A";
+////		} else if (area.equals("경기")) {
+////			setArea = "B";
+////		} else if (area.equals("인천")) {
+////			setArea = "C";
+////		} else if (area.equals("대전")) {
+////			setArea = "D";
+////		} else if (area.equals("대구")) {
+////			setArea = "E";
+////		} else if (area.equals("부산")) {
+////			setArea = "F";
+////		} else if (area.equals("울산")) {
+////			setArea = "G";
+////		} else if (area.equals("광주")) {
+////			setArea = "H";
+////		} else if (area.equals("충북")) {
+////			setArea = "I";
+////		} else if (area.equals("경북")) {
+////			setArea = "J";
+////		} else if (area.equals("전북")) {
+////			setArea = "K";
+////		} else if (area.equals("충남")) {
+////			setArea = "L";
+////		} else if (area.equals("경남")) {
+////			setArea = "M";
+////		}
+//		
+//		System.out.println("after----"+afterOutput);
+//		
+//		return afterOutput;
+//	}
 	
 	
 	
@@ -297,46 +294,48 @@ public class HomeController {
 		return "home";
 	}
 	
-	// 회원 가입
-	@ResponseBody
-	@RequestMapping(value = "signInUser.do", method = RequestMethod.POST)
-	public String signInUser(HttpSession session,
-			@RequestParam(value="email") String email,
-			@RequestParam(value="type") String type) {
-		
-		// TODO 잘못된 정보 들어왔을때 대응 필요함 프론트에서 하던지 둘다 하던지 일단 작성해야함
-		// TODO 같은 이메일정보의 구글, 네이버, 카카오톡 로그인시 병합하는 기능 추가 << 아마 impl 매퍼 죄다 수정
-		// TODO 구글은 왜 바로불러오는가... 알아야함 ㅠㅠ
-		// TODO 세션비교값을 토큰값으로 바꿔야함 email xxxx << 이거는 로그인에서 적용
-		
-		User input = new User();
-		
-		input.setEmail(email);
-		input.setType(type);
-		
-		if (userService.checkUser(email)) {
-			return "1";
-		} else {
-			userService.signInUser(input);
-			return "2";
-		}
-		
-		
-		
-		
-	}
+
 	
+	// 회원 가입
+//	@ResponseBody
+//	@RequestMapping(value = "signInUser.do", method = RequestMethod.POST)
+//	public String signInUser(HttpSession session,
+//			@RequestParam(value="email") String email,
+//			@RequestParam(value="type") String type) {
+//		
+//		// TODO 잘못된 정보 들어왔을때 대응 필요함 프론트에서 하던지 둘다 하던지 일단 작성해야함
+//		// TODO 같은 이메일정보의 구글, 네이버, 카카오톡 로그인시 병합하는 기능 추가 << 아마 impl 매퍼 죄다 수정
+//		// TODO 구글은 왜 바로불러오는가... 알아야함 ㅠㅠ
+//		// TODO 세션비교값을 토큰값으로 바꿔야함 email xxxx << 이거는 로그인에서 적용
+//		
+//		Users input = new Users();
+//		
+//		input.setEmail(email);
+//		input.setType(type);
+//		
+//		if (userService.checkUser(email)) {
+//			return "1";
+//		} else {
+//			userService.signInUser(input);
+//			return "2";
+//		}
+//		
+		
+		
+		
+//	}
+	/*
 	/*매치필터 ajax*/
-	@ResponseBody
-	@RequestMapping(value="matchFilter.do", method=RequestMethod.POST)
-	public int matchFilter(
+//	@ResponseBody
+//	@RequestMapping(value="matchFilter.do", method=RequestMethod.POST)
+//	public int matchFilter(
 	//public int matchFilter(Model result, HttpServletResponse response, HttpSession session,
-			@RequestParam(value="params") String[] params,
-			@RequestParam(value="area") String area,
-			@RequestParam(value="day") String day) {
+//			@RequestParam(value="params") String[] params,
+//			@RequestParam(value="area") String area,
+//			@RequestParam(value="day") String day) {
 //		@RequestParam(value="day") @DateTimeFormat(pattern="yyyy-MM-dd") Date day) {
 		
-		System.out.println("matchFilter.do");
+//		System.out.println("matchFilter.do");
 //		for(String i : params) {
 //			System.out.println("params = " + i);
 //		}
@@ -344,10 +343,10 @@ public class HomeController {
 //		System.out.println("day = " + day);
 //		
 
-		MatchFilter input = new MatchFilter();
+//		MatchFilter input = new MatchFilter();
 		
-		String genderRule = "";
-		String level = "";
+//		String genderRule = "";
+//		String level = "";
 		
 //		for (int i = 0 ; i < params.length ; i++) {
 //			if (params[i].equals("Male")) {
@@ -410,65 +409,65 @@ public class HomeController {
 //		}
 		
 		
-		for (int i = 0 ; i < params.length ; i++) {
-			if (params[i].equals("Male")) {
-				genderRule = "('M')";
-				input.setGender_rule(genderRule);
-			} else if (params[i].equals("Female")) {
-				if (genderRule.equals("('M')")) {
-					genderRule = "('M','F')";
-					input.setGender_rule(genderRule);
-				} else {
-					genderRule = "('F')";
-					input.setGender_rule(genderRule);
-				}
-			} else if (params[i].equals("Mix")) {
-				if (genderRule.equals("('M')")) {
-					genderRule = "('M','H')";
-					input.setGender_rule(genderRule);
-				} else if (genderRule.equals("('F')")){
-					genderRule = "('F','H')";
-					input.setGender_rule(genderRule);
-				} else if (genderRule.equals("('M','F')")) {
-					genderRule = "('M','F','H')";
-					input.setGender_rule(genderRule);
-				}
-			} else {
-				genderRule = "('M','F','H')";
-				input.setGender_rule(genderRule);
-			}
-		}
-		
-		// 레벨 파라미터값 분별후 쿼리문으로 전송
-		// Low, Middle, High
-		for (int i = 0 ; i < params.length ; i++) {
-			if (params[i].equals("Low")) {
-				level = "('L')";
-				input.setLevel(level);
-			} else if (params[i].equals("Middle")) {
-				if (level.equals("('L')")) {
-					level = "('L','M')";
-					input.setLevel(level);
-				} else {
-					level = "('M')";
-					input.setLevel(level);
-				}
-			} else if (params[i].equals("High")) {
-				if (level.equals("('L')")) {
-					level = "('L','H')";
-					input.setLevel(level);
-				} else if (level.equals("('M')")){
-					level = "('M','H')";
-					input.setLevel(level);
-				} else if (level.equals("('L','M')")) {
-					level = "('L','M','H')";
-					input.setLevel(level);
-				}
-			} else {
-				level = "('L','M','H')";
-				input.setLevel(level);
-			}
-		}
+//		for (int i = 0 ; i < params.length ; i++) {
+//			if (params[i].equals("Male")) {
+//				genderRule = "('M')";
+//				input.setGender_rule(genderRule);
+//			} else if (params[i].equals("Female")) {
+//				if (genderRule.equals("('M')")) {
+//					genderRule = "('M','F')";
+//					input.setGender_rule(genderRule);
+//				} else {
+//					genderRule = "('F')";
+//					input.setGender_rule(genderRule);
+//				}
+//			} else if (params[i].equals("Mix")) {
+//				if (genderRule.equals("('M')")) {
+//					genderRule = "('M','H')";
+//					input.setGender_rule(genderRule);
+//				} else if (genderRule.equals("('F')")){
+//					genderRule = "('F','H')";
+//					input.setGender_rule(genderRule);
+//				} else if (genderRule.equals("('M','F')")) {
+//					genderRule = "('M','F','H')";
+//					input.setGender_rule(genderRule);
+//				}
+//			} else {
+//				genderRule = "('M','F','H')";
+//				input.setGender_rule(genderRule);
+//			}
+//		}
+//		
+//		// 레벨 파라미터값 분별후 쿼리문으로 전송
+//		// Low, Middle, High
+//		for (int i = 0 ; i < params.length ; i++) {
+//			if (params[i].equals("Low")) {
+//				level = "('L')";
+//				input.setLevel(level);
+//			} else if (params[i].equals("Middle")) {
+//				if (level.equals("('L')")) {
+//					level = "('L','M')";
+//					input.setLevel(level);
+//				} else {
+//					level = "('M')";
+//					input.setLevel(level);
+//				}
+//			} else if (params[i].equals("High")) {
+//				if (level.equals("('L')")) {
+//					level = "('L','H')";
+//					input.setLevel(level);
+//				} else if (level.equals("('M')")){
+//					level = "('M','H')";
+//					input.setLevel(level);
+//				} else if (level.equals("('L','M')")) {
+//					level = "('L','M','H')";
+//					input.setLevel(level);
+//				}
+//			} else {
+//				level = "('L','M','H')";
+//				input.setLevel(level);
+//			}
+//		}
 		
 		// 성별 파라미터값 분별후 쿼리문으로 전송
 		// Male, Female, Mix
@@ -625,7 +624,7 @@ public class HomeController {
 //			setArea = "M";
 //		}
 		
-		input.setArea(area);
+		//input.setArea(area);
 
 		
 		// day 값은 20210507 << 이런식으로 가져와야함 int값 째로 가져올거면 상위 리퀘스트 파람의 데이터 타입을 변경해야함
@@ -633,23 +632,23 @@ public class HomeController {
 		//int setDay = Integer.parseInt(day);
 		//input.setDay(setDay);
 		
-		System.out.println("-----------");
-		System.out.println(input);
+//		System.out.println("-----------");
+//		System.out.println(input);
 
-		List<MatchFilter> output = matchFilterService.getMatchFilter(input);
-		
-		// 해당 서치값이 없을때
-		if (output == null) {
-			return 0;
-		}
-		
-		int count = output.size();
-		
-		
-		for(MatchFilter i : output) {
-			System.out.println("-----");
-			System.out.println(i);
-		}
+//		List<MatchFilter> output = matchFilterService.getMatchFilter(input);
+//		
+//		// 해당 서치값이 없을때
+//		if (output == null) {
+//			return 0;
+//		}
+//		
+//		int count = output.size();
+//		
+//		
+//		for(MatchFilter i : output) {
+//			System.out.println("-----");
+//			System.out.println(i);
+//		}
 		
 		//result.addAttribute("output", output);
 		//result.addAttribute("count", count); // 서치된 item 개수
@@ -658,9 +657,11 @@ public class HomeController {
 		// 해당 리스트 값을 뿌려준다. (가져다 쓰세요)
 		
 		
-		return 1;
-	}
+//		return 1;
+//	}
+		
 	
 	
 	
 }
+	
