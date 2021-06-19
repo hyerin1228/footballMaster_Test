@@ -48,19 +48,19 @@
                 <div class="main__filter">
                     <div class="main__match-filter">
                         <ul>
-                            <li><a id="A" @click="fetchMatches('A',$event)" class="match-filter-item--active">서울</a></li>
-                            <li><a id="B" @click="fetchMatches('B',$event)" >경기</a></li>
-                            <li><a id="C" @click="fetchMatches('C',$event)" >인천</a></li>
-                            <li><a id="D" @click="fetchMatches('D',$event)" >대전</a></li>
-                            <li><a id="E" @click="fetchMatches('E',$event)" >대구</a></li>
-                            <li><a id="F" @click="fetchMatches('F',$event)" >부산</a></li>
-                            <li><a id="G" @click="fetchMatches('G',$event)" >울산</a></li>
-                            <li><a id="H" @click="fetchMatches('H',$event)" >광주</a></li>
-                            <li><a id="I" @click="fetchMatches('I',$event)" >충북</a></li>
-                            <li><a id="J" @click="fetchMatches('J',$event)" >경북</a></li>
-                            <li><a id="K" @click="fetchMatches('K',$event)" >전북</a></li>
-                            <li><a id="L" @click="fetchMatches('L',$event)" >충남</a></li>
-                            <li><a id="M" @click="fetchMatches('M',$event)" >경남</a></li>
+                            <li><a id="A" @click="fetchMatches('A',$event)" :class="{'match-filter-item--active': selectRegion == 'A'}">서울</a></li>
+                            <li><a id="B" @click="fetchMatches('B',$event)" :class="{'match-filter-item--active': selectRegion == 'B'}">경기</a></li>
+                            <li><a id="C" @click="fetchMatches('C',$event)" :class="{'match-filter-item--active': selectRegion == 'C'}">인천</a></li>
+                            <li><a id="D" @click="fetchMatches('D',$event)" :class="{'match-filter-item--active': selectRegion == 'D'}">대전</a></li>
+                            <li><a id="E" @click="fetchMatches('E',$event)" :class="{'match-filter-item--active': selectRegion == 'E'}">대구</a></li>
+                            <li><a id="F" @click="fetchMatches('F',$event)" :class="{'match-filter-item--active': selectRegion == 'F'}">부산</a></li>
+                            <li><a id="G" @click="fetchMatches('G',$event)" :class="{'match-filter-item--active': selectRegion == 'G'}">울산</a></li>
+                            <li><a id="H" @click="fetchMatches('H',$event)" :class="{'match-filter-item--active': selectRegion == 'H'}">광주</a></li>
+                            <li><a id="I" @click="fetchMatches('I',$event)" :class="{'match-filter-item--active': selectRegion == 'I'}">충북</a></li>
+                            <li><a id="J" @click="fetchMatches('J',$event)" :class="{'match-filter-item--active': selectRegion == 'J'}">경북</a></li>
+                            <li><a id="K" @click="fetchMatches('K',$event)" :class="{'match-filter-item--active': selectRegion == 'K'}">전북</a></li>
+                            <li><a id="L" @click="fetchMatches('L',$event)" :class="{'match-filter-item--active': selectRegion == 'l'}">충남</a></li>
+                            <li><a id="M" @click="fetchMatches('M',$event)" :class="{'match-filter-item--active': selectRegion == 'M'}">경남</a></li>
                         </ul>
 <!--                         <ul v-if="runBounce">
                     
@@ -102,7 +102,7 @@
                                     	<span v-else-if="match.gender_rule == '혼성' " class="match--option isMix">남녀모두</span>
                                     	<span v-else-if="match.gender_rule == '여성'" class="match--option isWomen">여성</span>
                                         
-                                        <span v-if="match.level == '일반 (Lv 1~5)'" class="match--option is_beginner">일반 (Lv 1~5)</span>
+                                        <span v-if="match.level == '일반 (Lv 1~5)'" class="match--option is_every">일반 (Lv 1~5)</span>
 	                                    <span v-else-if="match.level == '초급 (Lv 1~2)'" class="match--option is_beginner">초급 (Lv 1~2)</span>
 	                                    <span v-else-if="match.level == '중급 (Lv 3~5)'" class="match--option is_mid">중급 (Lv 3~5)</span>
                                         <!---->

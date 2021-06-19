@@ -91,16 +91,18 @@
         <div class="container" id="plabContainer">
             <div class="navbar" id="navbar-main">
                 <div class="navContainer home">
-                    <div class="newLogo">
+                    <div class="newLogo" style="float:left;">
                         <a href="http://localhost:8080/footballMaster/matches"><img src="https://plab-football.s3.amazonaws.com/static/img/logo.svg"
                                 alt="플랩풋볼"></a>
                     </div>
-                    <div class="top--menu" id="userMenu">
-                        <div class="goIn">
-                            <a id="loginModalBtn" onclick="loginModal_Click();">로그인</a>
-                            <span>또는</span>
-                            <a>회원가입</a>
-                        </div>
+                    <div class="top--menu" id="userMenu" style="float:right;">
+                    	<div class="mainTab">
+	                        <div class="goIn">
+	                            <a id="loginModalBtn" onclick="loginModal_Click();">로그인</a>
+	                            <span>또는</span>
+	                            <a>회원가입</a>
+	                        </div>
+                    	</div>
 
                         <div id="sidebar-main-trigger" class="icon">
                             <a href="http://localhost:8080/footballMaster/mypage">
