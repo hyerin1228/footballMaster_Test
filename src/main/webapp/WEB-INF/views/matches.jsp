@@ -7,10 +7,6 @@
                 <div class="navigation--wrapper">
                     <div class="navigation--item">
                         <a class="selected" href="/">소셜 매치</a>
-                        <a href="/rental/">
-                            구장 예약
-                            <span class="is_new">N</span>
-                        </a>
                     </div>
                 </div>
             </div>
@@ -101,8 +97,11 @@
                                     	<span v-if="match.gender_rule == '남성'" class="match--option isMen">남성</span>
                                     	<span v-else-if="match.gender_rule == '혼성' " class="match--option isMix">남녀모두</span>
                                     	<span v-else-if="match.gender_rule == '여성'" class="match--option isWomen">여성</span>
-                                        
-                                        <span v-if="match.level == '일반 (Lv 1~5)'" class="match--option is_every">일반 (Lv 1~5)</span>
+                                        <span v-if="match.man_to_man_rule == '5:5'">5vs5</span>
+                                    	<span v-else-if="match.man_to_man_rule == '6:6'">6vs6</span>
+                                    	<span v-else-if="match.man_to_man_rule == '7:7'">7vs7</span>
+                                    	<span v-else-if="match.man_to_man_rule == '4:4'">4vs4</span>
+                                        <span v-if="match.level == '고급 (Lv 5)'" class="match--option is_every">고급 (Lv 5)</span>
 	                                    <span v-else-if="match.level == '초급 (Lv 1~2)'" class="match--option is_beginner">초급 (Lv 1~2)</span>
 	                                    <span v-else-if="match.level == '중급 (Lv 3~5)'" class="match--option is_mid">중급 (Lv 3~5)</span>
                                         <!---->
@@ -156,15 +155,15 @@
                                     <ul class="filter--list">
                                         <h4>성별</h4>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="sex_m" value="Male" v-model="checkedNames">
+                                            <input type="checkbox" class="filterCheck grey" id="sex_m" value="M" v-model="checkedSex">
                                             <label for="sex_m" class="checkLabel">남성</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="sex_w" value="Female" v-model="checkedNames">
+                                            <input type="checkbox" class="filterCheck grey" id="sex_w" value="F" v-model="checkedSex">
                                             <label for="sex_w" class="checkLabel">여성</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="sex_u" value="Mix" v-model="checkedNames">
+                                            <input type="checkbox" class="filterCheck grey" id="sex_u" value="H" v-model="checkedSex">
                                             <label for="sex_u" class="checkLabel">남녀 모두</label>
                                         </li>
                                     </ul>
@@ -173,15 +172,15 @@
                                         <h4>레벨</h4>
                                         <li>
                                             <input type="checkbox" class="filterCheck grey" id="level_beginner"
-                                                value="Low" v-model="checkedNames">
+                                                value="L" v-model="checkedLevel">
                                             <label for="level_beginner" class="checkLabel">초급 (Lv 1~2)</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="level_mid" value="Middle" v-model="checkedNames">
+                                            <input type="checkbox" class="filterCheck grey" id="level_mid" value="M" v-model="checkedLevel">
                                             <label for="level_mid" class="checkLabel">중급 (Lv 3~5)</label>
                                         </li>
                                         <li>
-                                            <input type="checkbox" class="filterCheck grey" id="level_every" value="High" v-model="checkedNames">
+                                            <input type="checkbox" class="filterCheck grey" id="level_every" value="H" v-model="checkedLevel">
                                             <label for="level_every" class="checkLabel">일반 (Lv 1~5)</label>
                                         </li>
                                     </ul>
@@ -226,14 +225,19 @@
                 delimiters: ['[[', ']]'],
                 el: '#app',
                 data: {
-                	checkedNames: [],
-                	currentDate: '',  //현재 날짜
-                    checkedSex: [],
-                    checkedLevel: [],
-                    checkedType: [],
-                    checkedRegion: [],
                     checkedParam: [],
-
+                	currentDate: '',  //현재 날짜
+                	checkedNames: [],
+                		
+                	// 성별
+                	checkedSex: [],
+                	selectSex: [],
+                	// 레벨
+                	checkedLevel : [],
+                	selectLevel: [],
+                	
+                	checkedType: [],
+                    checkedRegion: [],
                     matchDays: [],
                     currentMatches: [],
                     currentMatchesNum: [],
@@ -374,8 +378,7 @@
                     fetchMatches(regionId, event) {
                     	
                     	// 첫 로드 때 지역 기본값은 서울로 지정... 그 다음부터는 클릭한 곳으로..
-                    	console.log("regionid 찍히는지")
-                    	console.log(targetId);
+                    	console.log(regionId);
                     	var selectReg = "";
 
                     	// 1. 선택한 지역
@@ -389,14 +392,37 @@
                     	}
                     	console.log("선택한 지역 ["+selectReg+"]")
 						
-                    	// 2. 카테고리 & 레벨
+                    	//checkedParam
                     	
-                    	var paramCate = this.checkedNames;
-						if(paramCate == null){
-							paramCate = ["Male","Female","Mix","Low","Middle","High"]
-						}
+                    	// 2. 카테고리 & 레벨
+                    	// 값 있으면 checkedParam에 넣기.
+                    	// 현재 카테고리 체크된 값이 없으면 임의의 값 지정해주기
 						
-						console.log("paramCate [" + paramCate + "]")
+                    	if(Array.isArray(this.selectSex) && this.selectSex.length === 0){
+                    		console.log("성별 - 아무값도 없어요")
+                    		this.selectSex = "MFH";
+                    	}else{
+                    		this.selectSex = this.checkedSex;
+/*                     		for(var i = 0; i<this.checkedSex; i++){
+	                    		this.selectSex += this.checkedSex(i);
+                    		} */
+                    	}
+                    	
+                    	if(Array.isArray(this.selectLevel) && this.selectLevel.length === 0){
+                    		console.log("레벨 - 아무값도 없어요")
+                    		this.selectLevel = "LMH";
+                    	}else{
+                    		this.selectLevel = this.checkedLevel;
+                    		/* for(var i = 0; i<this.checkedLevel; i++){
+                    			this.selectLevel += this.checkedLevel(i);
+                    		} */
+                    	}
+                    	
+                    	
+                    	console.log(this.selectSex)
+                    	console.log(this.selectLevel)
+                    	console.log(this.currentDate)
+                    	console.log(this.selectRegion)
                     	
                     	var v = this;
                         v.isLoading = true
@@ -416,9 +442,18 @@
         				var paramArea2 = selectReg
         				var paramDay2 = this.currentDate
         				
-        				var queryStr = paramArr1+paramArr2+paramArea1+paramArea2+paramDay1+paramDay2;
-                        
-        				axios.get('http://localhost:8081/footballMaster/matches?'+queryStr)
+        				
+        				//var queryStr = paramArr1+selectCate+paramArea1+paramArea2+paramDay1+paramDay2;
+
+        				//console.log("queryStr : " + queryStr)
+        				
+        				
+        				axios.post('http://localhost:8081/footballMaster/matches',{
+	        						'match_date' : this.currentDate,
+	        						'gender_rule' : this.selectSex,
+	        						'level' : this.selectLevel,
+	        						'region' : this.selectRegion
+        				})
         				.then(function(res) {
         					console.log("---1---")
         					console.log(res.data);
@@ -452,13 +487,9 @@
                     	console.log("btn clicked !!!!")
                     	var target = this.selectRegion
                     	
-                    	
                     	// 선택된 카테고리 정보 담아둘 배열
-                    	var checkList = this.checkedNames;
                     	// modal 카테고리, 체크된 정보 가져오기!
-                    	console.log("-----------");
-                    	console.log(checkList);
-                    	
+					                    	
                     	
 
                     	// 첫 로드 때 지역 기본값은 서울로 지정... 그 다음부터는 클릭한 곳으로..
@@ -475,13 +506,35 @@
                     	console.log("선택한 지역 ["+selectReg+"]")
 						
                     	// 2. 카테고리 & 레벨
-                    	
-                    	var paramCate = this.checkedNames;
-						if(paramCate == null){
-							paramCate = ["Male","Female","Mix","Low","Middle","High"]
-						}
+                    	// 값 있으면 checkedParam에 넣기.
+                    	// 현재 카테고리 체크된 값이 없으면 임의의 값 지정해주기
 						
-						console.log("paramCate [" + paramCate + "]")
+                    	if(Array.isArray(this.selectSex) && this.selectSex.length === 0){
+                    		console.log("성별 - 아무값도 없어요")
+                    		this.selectSex = "MFH";
+                    	}else{
+                    		this.selectSex = this.checkedSex+"";
+/*                     		for(var i = 0; i<this.checkedSex; i++){
+	                    		this.selectSex += this.checkedSex(i);
+                    		} */
+                    	}
+                    	
+                    	if(Array.isArray(this.selectLevel) && this.selectLevel.length === 0){
+                    		console.log("레벨 - 아무값도 없어요")
+                    		this.selectLevel = "LMH";
+                    	}else{
+                    		this.selectLevel = this.checkedLevel+"";
+                    		/* for(var i = 0; i<this.checkedLevel; i++){
+                    			this.selectLevel += this.checkedLevel(i);
+                    		} */
+                    	}
+                    	
+                    	
+                    	console.log(this.selectSex)
+                    	console.log(this.selectLevel)
+                    	console.log(this.currentDate)
+                    	console.log(this.selectRegion)
+                    	
                     	
                     	var v = this;
                         v.isLoading = true
@@ -491,80 +544,42 @@
                         // parameter 보내려면 post방식을 get방식으로 달아서 보낼 수 없음
                         // 필요한거 1.성별-레벨 /2.지역 /3.날짜
 						//var paramCate = ["Male","Female","Mix","Low","Middle","High"]
-                        var paramArea = "A"
                         
-        				var paramArr1 = "&param=";
-        				var paramArea1 = "&area=";
-        				var paramDay1 = "&day=";
-        				// test - json 쿼리스트링 에러가 있는듯
-        				var paramArr2 = ['Male','Female','Mix','Low','Middle','High'];
-        				var paramArea2 = selectReg
-        				var paramDay2 = this.currentDate
-        				
-        				var queryStr = paramArr1+paramCate+paramArea1+paramArea2+paramDay1+paramDay2;
-                        
-        				axios.get('http://localhost:8081/footballMaster/matches?'+queryStr)
-        				.then(function(res) {
-        					console.log("---1---")
-        					console.log(res.data);
-                            v.isLoading = false
-                            v.fetchMainBanner()
-                            v.currentMatches = res.data
-                            
-                            console.log("---2---")
-                            console.log(v.currentMatches)
-                            
-                            var a = 0
-                            for(i=0; i < v.currentMatches.length; i++){
-                            	console.log("["+i+"]");
-                            	console.log(v.currentMatches[i]);
-                            	console.log("[2 : " + v.currentMatches[i].match_date+"]");
-                            	if(v.currentMatches[i].match_date < v.now){
-                            		a++
-                            		console.log("a++:"+a)
-                            	}
-                            }
-                            v.currentMatchesNum = a
-                            v.runBounce = true
+                        axios.post('http://localhost:8081/footballMaster/matches',{
+    						'match_date' : this.currentDate,
+    						'gender_rule' : this.selectSex,
+    						'level' : this.selectLevel,
+    						'region' : this.selectRegion
+						})
+						.then(function(res) {
+							console.log("---1---")
+							console.log(res.data);
+		                    v.isLoading = false
+		                    v.fetchMainBanner()
+		                    v.currentMatches = res.data
+		                    
+		                    console.log("---2---")
+		                    console.log(v.currentMatches)
+		                    
+		                    var a = 0
+		                    for(i=0; i < v.currentMatches.length; i++){
+		                    	console.log("["+i+"]");
+		                    	console.log(v.currentMatches[i]);
+		                    	console.log("[2 : " + v.currentMatches[i].match_date+"]");
+		                    	if(v.currentMatches[i].match_date < v.now){
+		                    		a++
+		                    		console.log("a++:"+a)
+		                    	}
+		                    }
+		                    v.currentMatchesNum = a
+		                    v.runBounce = true
+		                  	$(".modal").css("display", "none");
 						})
 						.catch(function() {
 							
 						})
-                    	
-                    	
-                    },
-                    getFilters() {
-                        // this.typeSearch = document.getElementById("searchId").value
-                        var paramCategory = "&params="
-                        var paramArea = "&area="
-                        var paramDay = "&day="
-                        
-                                
-                		var paramArr1 = "&param=";
-                		var paramArea1 = "&area=";
-                		var paramDay1 = "&day=";
-                		// test - json 쿼리스트링 에러가 있는듯
-                		var paramArr2 = ['Male','Female','Mix','Low','Middle','High'];
-               			var paramArea2 = selectReg
-              			var paramDay2 = this.currentDate
-                				
-              				var queryStr = paramArr1+paramArr2+paramArea1+paramArea2+paramDay1+paramDay2;
-	                    
-                            $.ajax({
-                                url: "http://localhost:8081/footballMaster/matches?"+queryStr,
-                                type:"GET",
-                          	  	dataType: "json",
-                          	  	jsonp : "callback",
-                                success: function(data) {
-                              	// data = email에 해당하는 유저정보
-                                  console.log(data);
-                                
-                                },
-                                error:function(request, status, error){ console.log("실패");console.log(request)
-                                }
-                              });
-
-                        return "?day=" + this.currentDate.toString() + paramCategory + paramCateOn + paramArea
+                 
+                    
                     },
                     
                     dateMatches: function(getDate, index) {
@@ -582,7 +597,7 @@
                     	document.cookie = "currentDate="+this.currentDate
                     	var url = "/footballMaster/matches/";
                     	document.location.href = url+matchId
-                    },
+                    }
 
                 },
                 watch: {
@@ -631,6 +646,7 @@
                 // 2. 모달 닫기
                 modalCloseBtn.onclick = () => {
                     modal.style.display = "none";
+                    //$(".modal").css("display", "none");
                 };
 
                 // 3. 모달안 적용하기 버튼

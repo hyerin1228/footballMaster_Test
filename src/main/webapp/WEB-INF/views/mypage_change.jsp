@@ -161,7 +161,33 @@ select {
                   <div class="inputwrap">
                       <label>환불 계좌 은행</label>
                         <select name="bank_cd" id="id_bank_cd">
-                            <option value="기업">은행이름</option>
+                            <option value="">---------</option>
+							  <option value="1">국민</option>
+							  <option value="2">기업</option>
+							  <option value="3">농협</option>
+							  <option value="4">신한(구조흥포함)</option>
+							  <option value="5">SC(스탠다드차타드)</option>
+							  <option value="6">KEB하나(구외환포함)</option>
+							  <option value="7">한국씨티(구 한미)</option>
+							  <option value="8">우리</option>
+							  <option value="9">경남</option>
+							  <option value="10">광주</option>
+							  <option value="11">대구</option>
+							  <option value="12">도이치</option>
+							  <option value="13">부산</option>
+							  <option value="14">산업</option>
+							  <option value="15">수협</option>
+							  <option value="16">전북</option>
+							  <option value="17">제주</option>
+							  <option value="18">새마을금고</option>
+							  <option value="19">신용협동조합</option>
+							  <option value="20">홍콩샹하이(HSBC)</option>
+							  <option value="21">상호저축은행중앙회</option>
+							  <option value="22">BOA(Bank of America)</option>
+							  <option value="23">제이피모간체이스</option>
+							  <option value="24">카카오뱅크</option>
+							  <option value="25">케이뱅크</option>
+							  <option value="26">유안타증권</option>
                         </select>
                     </div>
                   <div class="inputwrap">
