@@ -333,7 +333,10 @@
                         <div class="letsPlab">
                             <div class="lpWrapper">
                                 <div class="btnWrap">
-                                    <a href="/" class="btn disable">마감되었습니다</a>
+                                    <a v-bind:href="matchApplyLink" class="btn disable" :style="{'background-color': matchStatusBackgroundColor, 'color': matchStatusColor}">
+                                		<p>신청하기</p>
+                                		<span v-if="matchStatusMessage != null">{{matchStatusMessage}}</span>
+                                	</a>
                                 </div>
                             </div>
                         </div>
@@ -371,7 +374,15 @@ console.log("matchId["+matchId+"]");
 var matchDetail = new Vue({
 	el: '#matchContent',
 	data: {
-		currentMatch: []	// 가져온 매치 정보
+		currentMatch: [],	// 가져온 매치 정보
+		matches: [],
+	    leftPlayers: '',
+	    minLeftPlayers: '',
+	    matchStatusBackgroundColor: '#3534A5',
+	    matchStatusColor: '#fff',
+	    matchStatusMessage: null,
+	    matchApplyLink: ''
+	    
 		
 	},
 	created: function() {
@@ -395,6 +406,34 @@ var matchDetail = new Vue({
                 //this.$set(this.currentMatch, res.data)
                 console.log(v.currentMatch)
                 
+                // 신청하기 링크 생성
+                v.matchApplyLink  = 'http://localhost:8080/footballMaster/matches/' + v.currentMatch.id + '/apply'
+                console.log(v.matchApplyLink);
+                
+                console.log("매치 최대인원 = " + v.currentMatch.max_people)
+                console.log("매치 현재 신청인원수 = " + v.currentMatch.applicantCount)
+                
+                v.leftPlayers = v.currentMatch.max_people - v.currentMatch.applicantCount
+		        if(v.currentMatch.applicantCount < v.currentMatch.min_people) {
+		           v.minLeftPlayers = v.currentMatch.min_people - v.currentMatch.applicantCount
+		        	console.log(v.leftPlayers)
+		        	console.log(v.minLeftPlayers)
+		        }
+                
+				if (v.currentMatch.applicantCount <= v.currentMatch.max_people) {
+					v.matchStatusBackgroundColor = '#FFC645'
+				    v.matchStatusColor = '#333'
+				    v.matchStatusMessage = '진행 확정까지 '+v.minLeftPlayers+'명 남음'
+		         }else{
+		        	 v.matchStatusBackgroundColor = '#E22F46'
+				     v.matchStatusMessage = v.leftPlayers+'자리 남음'
+		         }
+				
+		        console.log("모집 최소 인원 = "+v.currentMatch.min_people)
+		        console.log("신청 가능 인원 = "+v.leftPlayers)
+	        	console.log("신청 남은 인원 = "+v.minLeftPlayers)
+		        console.log("matchStatusMessage ["+v.matchStatusMessage+"]")
+                
             })
             .catch(function (err) { })
 		},
@@ -416,8 +455,20 @@ var matchDetail = new Vue({
 	
 });
 
-
 </script>
+
+<script src="https://unpkg.com/vue-cookies@1.7.0/vue-cookies.js"></script>
+<script>
+/*       noCash() {
+        var is_ok = confirm('캐시가 부족합니다. 캐시를 충전하시겠습니까?')
+        if (is_ok) {
+          location.href = "/cash/charge/"
+          this.$cookies.set('lm', '59555', '2h')
+          this.$cookies.set('pt', 'social', '2h')
+        }
+      } */
+</script>
+
 
             <!-- footer -->
             <%@include file='includes/footer.jsp' %>

@@ -4,15 +4,15 @@
 	 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.8/dist/vue.js"></script>
 		
 <div class="content">
-            <div class="contentWrapper">
+            <div class="contentWrapper" id="content">
                 <div class="userInfo">
                     <form id="form" class="orderForm" method="POST">
                         <input type="hidden" name="csrfmiddlewaretoken"
                             value="Iw9DlSdh0nMxhVSTgkRpQkSnR37Up9ckPWR9DDBplNRA8AbXsffIFA5PRDj68znz">
                         <div class="orderTitle">
-                            <h2>2021년 6월 18일 금요일 10:00</h2>
-                            <h2>서초 스타 풋살장 A면</h2>
-<!--                         </div> -->
+                            <h2 id="matchDate">[[ currentMatches.match_date ]]</h2>
+                            <h2 id="matchStadium">[[ currentMatches.name ]]</h2>
+                         </div>
                         <div class="orderInfo">
                             <fieldset>
                                 <h3>신청 정보</h3>
@@ -32,19 +32,6 @@
                                                     href="/cs/6/topic/141/">자세히 보기</a></p>
                                         </div>
                                     </div>
-                                    <div class="inputWrap" style="display:none">
-                                        <label>원데이매니저</label>
-                                        <div class="inputWrapper">
-                                            <select name="leader_apply" id="leader_apply" class="inputFull">
-                                                <option value="0">미신청</option>
-
-                                                <option value="1">신청</option>
-
-                                            </select>
-                                            <p class="inputNotice" style="color:#333;font-weight: 400;">매치를 정상적으로 마치면
-                                                캐시를 <strong>전액 환급</strong> 해드립니다.</p>
-                                        </div>
-                                    </div>
                                     <!-- fullloader 있으면 창 다 가려져서 안나옴.. 이유는 왜인지??... -->
 <!--                                     <div id="fullLoader" class="fullLoader" v-if="isFullLoading">
                                         <div class="loaderIMG">
@@ -52,66 +39,6 @@
                                         </div>
                                     </div> -->
                                     
-                                    <div class="modal--container" v-if="editPlayStyle" v-cloak>
-                                        <div class="modal--mask white--mask"></div>
-                                        <div class="modal--wrapper isFullScroll">
-                                            <div class="modal--header">
-                                                <p class="my--style--title">즐거운 매치를 위해 실제 실력에 맞게 선택해주세요.</p>
-                                            </div>
-                                            <div class="modal--body">
-                                                <div class="set--my--type type--radio">
-                                                    <transition name="slide-fade">
-                                                        <div class="level--title" v-if="show">
-                                                            <h1>[[ levelTitle ]]</h1>
-                                                            <p>[[ levelGuide ]]</p>
-                                                        </div>
-                                                    </transition>
-                                                    <ul class="style--input--wrapper">
-                                                        <li v-for="(myLevel, index) in myLevels" style="width: 20%;">
-                                                            <input type="radio" class="styleRadio grey"
-                                                                :id="myLevel.level" :value="myLevel.level"
-                                                                v-model="pickLevel">
-                                                            <label :for="myLevel.level" class="checkLabel"
-                                                                style="width: 100%;display: block;"
-                                                                @click="showLevelGuide(index)">[[ myLevel.txt ]]</label>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="set--my--type type--radio">
-                                                    <h4>공수 성향</h4>
-                                                    <ul class="style--input--wrapper">
-                                                        <li v-for="(myStyle, index) in myStyles"
-                                                            style="flex-grow: 3; flex-basis: 33%;">
-                                                            <input type="radio" class="styleRadio grey"
-                                                                :id="myStyle.style" :value="myStyle.style"
-                                                                v-model="pickStyle">
-                                                            <label :for="myStyle.style" class="checkLabel">[[
-                                                                myStyle.txt ]]</label>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <div class="set--my--type type--radio">
-                                                    <h4>자신있는 능력</h4>
-                                                    <ul class="style--input--wrapper">
-                                                        <li v-for="(myStrength, index) in myStrengths"
-                                                            style="flex-grow:6;">
-                                                            <input type="radio" class="styleRadio grey"
-                                                                :id="myStrength.strength" :value="myStrength.strength"
-                                                                v-model="pickStrength">
-                                                            <label :for="myStrength.strength" class="checkLabel">[[
-                                                                myStrength.txt ]]</label>
-                                                        </li>
-                                                    </ul class="style--input--wrapper">
-                                                </div>
-                                                <div class="btn--wrap" :class="{'btn--double': haveStyle}">
-                                                    <span class="btn lg" style="background-color: #eee; color: #666"
-                                                        @click="editPlayStyle = false" v-if="haveStyle">취소</span>
-                                                    <span class="btn lg" @click="postPlayStyle">저장</span>
-                                                </div>
-                                                <p v-if="isError">모든 항목을 선택해주세요</p>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
 
 
@@ -198,8 +125,8 @@
                                 </div>
                             </fieldset>
                             <div class="btnWrap">
-                                <button id="btnApply" class="btn order" type="button" onclick="pressedApplyButton()">결제
-                                    및 신청</button>
+                                <!-- <button id="btnApply" class="btn order" type="button" onclick="pressedApplyButton()">결제 -->
+                                <button id="btnApply" class="btn order" type="button" @click="pressedApplyButton()">결제 및 신청</button>
                             </div>
                         </div>
                     </form>
@@ -230,6 +157,19 @@
 	
 		<script>	
 		$(document).ready(function () {
+			
+			// 현재 매치 id 얻어오기
+			var paramStr = window.location.href
+			console.log("param["+paramStr+"]");
+			var matchId = paramStr.split('/').reverse()[1]; // '/'로 나누어진 마지막 문자 얻어오기
+			console.log("param["+matchId+"]");
+			
+			// 현재 매치 date 와 stadium 이름 얻어오기
+//			const matchDate = document.getElementById('matchDate').innerText;
+//			const matchStadium = document.getElementById('matchStadium').innerText;
+			
+			
+			
 			
 			// 값 설정
 			cal_cash()
@@ -300,18 +240,88 @@
 		
 		const teamApp = new Vue({
 			delimiters: ["[[", "]]"],
-            el: "#myPlayType",
+            el: "#content",
             data:{
-            	isFullLoading: true
+            	isFullLoading: true,
+            	currentMatches: [],
+            	currentUser: [],
+            	
+            	// 캐시 
+            	// 매치 이용 금액 participation_fee / 유저 보유 금액balance
+            	matchFee: '',
+            	userBalace: ''
+            	
+            	
             },
+            
 			created(){
-				his.fetchPlayStyle()
+            	// 처음 로딩.
+            	this.fetchMatch()
+            	this.fetchUserInfo()
 			},
+			
 			methods:{
-				fetchPlayStyle() {
-				const v = this
-				v.isFullLoading = false
+				fetchMatch() {
+					
+					const v = this
+					v.isFullLoading = false
+					
+					// 현재 매치 id 얻어오기
+					var paramStr = window.location.href
+					console.log("param["+paramStr+"]");
+					var matchId = paramStr.split('/').reverse()[1]; // '/'로 나누어진 마지막 문자 얻어오기
+					console.log("param["+matchId+"]");
+					
+					// 1. 현재 매치 정보
+					// 2. 현재 유저 정보
+					axios.get('http://localhost:8081/footballMaster/matches/'+matchId)
+					.then(function(res) {
+						console.log("---1. 매치조회---")
+						console.log(res.data);
+			            v.currentMatches = res.data
+			            
+			            console.log("---2. 매치조회---")
+			            console.log(v.currentMatches)
+			            
+			            
+			            
+					})
+					.catch(function() {
+						
+					});
+
+				},
+				
+				fetchUserInfo(){
+					// 유저 정보
+					const v = this;
+					var uEmail = "asdf@naver.com"
+					console.log("uEmail="+uEmail)
+					
+					axios.get('http://localhost:8081/footballMaster/my?email='+uEmail)
+					.then(function(res) {
+						console.log("---1.유저조회---")
+						console.log(res.data);
+			            v.currentUser = res.data
+			            
+			            console.log("---2.유저조회---")
+			            console.log(v.currentUser)
+			            
+					})
+					.catch(function() {
+						console.log("---유저조회 실패---")
+					})
+				},
+				
+				// 신청하기 버튼 이벤트
+				pressedApplyButton(){
+					console.log("pressedApplyButton 신청하기 버튼 클릭 이벤트!")
+					
+					
+					
+					
 				}
+				
 			},
 			computed:{
 				

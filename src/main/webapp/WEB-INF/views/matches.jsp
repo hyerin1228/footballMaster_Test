@@ -110,17 +110,15 @@
                                     </div>
                                 </div>
                                 <div class="list--match-schedule__status">
-                                    <div class="match-status isFull" v-if="now">
+                                    <div class="match-status isFull" v-if="match.applicantCount == match.max_people">
 		                                <p>마감</p>
 		                            </div>
-<!-- 		                            <div class="match-status isHurry" v-else-if="match.apply_status == 'hurry'">
+ 		                            <div class="match-status isHurry" v-else-if="match.applicantCount >= (match.max_people/2)">
 		                                <p>마감임박!</p>
-		                                
 		                            </div>
-		                            <div class="match-status isOpen" v-else-if="match.apply_status == 'available'">
+		                            <div class="match-status isOpen" v-else-if="match.applicantCount <= (match.max_people/2)">
 		                                <p>신청가능</p>
-		                                
-		                            </div> -->
+		                            </div>
                                 </div>
                             </a>
                             <!---->
@@ -402,7 +400,9 @@
                     		console.log("성별 - 아무값도 없어요")
                     		this.selectSex = "MFH";
                     	}else{
-                    		this.selectSex = this.checkedSex;
+                    		if(this.checkedSex.length !== 0){
+	                    		this.selectSex = this.checkedSex;
+                    		}
 /*                     		for(var i = 0; i<this.checkedSex; i++){
 	                    		this.selectSex += this.checkedSex(i);
                     		} */
@@ -412,7 +412,9 @@
                     		console.log("레벨 - 아무값도 없어요")
                     		this.selectLevel = "LMH";
                     	}else{
-                    		this.selectLevel = this.checkedLevel;
+                    		if(this.checkedLevel.length !== 0){
+	                    		this.selectLevel = this.checkedLevel;
+                    		}
                     		/* for(var i = 0; i<this.checkedLevel; i++){
                     			this.selectLevel += this.checkedLevel(i);
                     		} */
@@ -524,6 +526,7 @@
                     		this.selectLevel = "LMH";
                     	}else{
                     		this.selectLevel = this.checkedLevel+"";
+                    		console.log("sl : " +this.selectLevel)
                     		/* for(var i = 0; i<this.checkedLevel; i++){
                     			this.selectLevel += this.checkedLevel(i);
                     		} */

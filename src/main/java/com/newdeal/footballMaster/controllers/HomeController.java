@@ -125,10 +125,11 @@ public class HomeController {
 	}
 	
 	// test 매치신청페이지로 이동 -혜린
-	@RequestMapping(value = "/matches//matchApply", method = RequestMethod.GET)
-	public String matchApply() {
+	@RequestMapping(value = "/matches/{matchId}/apply", method = RequestMethod.GET)
+	public String matchApply(@PathVariable String matchId) {
 		logger.info("Welcome matchApply!");
-	
+		logger.info("matchId ["+matchId+"]");
+		
 		return "matchApply";
 	}
 	
