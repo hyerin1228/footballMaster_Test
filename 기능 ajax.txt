@@ -1,0 +1,239 @@
+
+내가 예약한 모든 경기
+$.ajax({
+      beforeSend: function (request)
+        {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
+      dataType: "json",
+      url: "http://localhost:8081/footballMaster/my_matches",
+      method : 'GET',
+      contentType : 'application/json; charset=UTF-8',
+      success: function(result) {
+        match_date, id, gender_rule, level, status
+        // 해당 result값 받아서 페이지에 뿌려주면 댐
+      }
+});
+
+
+
+나의 캐시 사용 내역
+$.ajax({
+      beforeSend: function (request)
+        {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
+      dataType: "json",
+      url: "http://localhost:8081/footballMaster/my_cash",
+      method : 'GET',
+      contentType : 'application/json; charset=UTF-8',
+      success: function(result) {
+        type(충전, 사용, 취소, 환불), price, created_at(결제 날짜)
+        // 해당 result값 받아서 페이지에 뿌려주면 댐
+      }
+});
+
+
+
+유저 캐시 충전( 최종 확인 버튼을 눌렀을때 )
+
+var priceJson = {
+  "price" = 클라이언트가 선택한 금액
+}
+
+$.ajax({
+      beforeSend: function (request)
+        {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
+      url:'http://localhost:8081/footballMaster/cash_charge'
+      , method : 'POST'
+      , data: JSON.stringify(priceJson)
+      , contentType : 'application/json; charset=UTF-8'
+      , dataType : 'json'
+      , success :function(){
+        window.location.replace("http://" + window.location.hostname +
+          ((location.port==""||location.port==undefined)?"":":" + location.port) + "/footballMaster/mypage/cash");
+      }
+});
+
+
+유저 캐시 환불하기
+
+var priceJson = {
+  "price" = 클라이언트가 선택한 금액
+}
+
+$.ajax({
+      beforeSend: function (request)
+        {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
+      url:'http://localhost:8081/footballMaster/cash_refund'
+      , method : 'POST'
+      , data: JSON.stringify(priceJson)
+      , contentType : 'application/json; charset=UTF-8'
+      , dataType : 'json'
+      , success :function(){
+        window.location.replace("http://" + window.location.hostname +
+          ((location.port==""||location.port==undefined)?"":":" + location.port) + "/footballMaster/mypage/cash");
+      }
+});
+
+
+
+유저 정보 변경
+
+var userJson = {
+  "gender" = 위에서 받은 성별값 (남성 or 여성),
+  "name" = 위에서 받은 이름,
+  "birthday" = 위에서 받은 생일,
+  "phone_number" = 위에서 받은 핸드폰 번호
+}
+
+$.ajax({
+      beforeSend: function (request)
+        {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
+      url:'http://localhost:8081/footballMaster/users'
+      , method : 'PUT'
+      , data: JSON.stringify(userJson)
+      , contentType : 'application/json; charset=UTF-8'
+      , dataType : 'json'
+      , success :function(){
+        window.location.replace("http://" + window.location.hostname +
+          ((location.port==""||location.port==undefined)?"":":" + location.port) + "/footballMaster/mypage");
+      }
+});
+
+
+환불 계좌 정보 가져오기
+
+$.ajax({
+      beforeSend: function (request)
+        {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
+      dataType: "json",
+      url: "http://localhost:8081/footballMaster/my_bank",
+      method : 'GET',
+      contentType : 'application/json; charset=UTF-8',
+      success: function(result) {
+        account_number, account_holder, banks_id(DB와 비교해서 프론트에서 뿌려주셈)
+        // 해당 result값 받아서 페이지에 뿌려주면 댐
+      }
+});
+
+
+환불 계좌 정보 변경하기
+
+var userBankJson = {
+  "account_number" = 위에서 받은 계좌번호,
+  "banks_id" = 위에서 받은 은행 아이디값,
+  "account_holder" = 위에서 받은 예금주명
+}
+
+$.ajax({
+      beforeSend: function (request)
+        {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
+      url:'http://localhost:8081/footballMaster/my_bank'
+      , method : 'PUT'
+      , data: JSON.stringify(userBankJson)
+      , contentType : 'application/json; charset=UTF-8'
+      , dataType : 'json'
+      , success :function(){
+        // 변경과 동시에 환불되는 페이지에서는 리다이렉트 링크를 지워줘야함
+        window.location.replace("http://" + window.location.hostname +
+          ((location.port==""||location.port==undefined)?"":":" + location.port) + "/footballMaster/mypage");
+      }
+});
+
+
+매치 등록
+
+var matches_id = 해당 매치의 id값
+
+$.ajax({
+      beforeSend: function (request)
+        {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
+      url:'http://localhost:8081/footballMaster/reservation/' + matches_id
+      , method : 'POST'
+      , contentType : 'application/json; charset=UTF-8'
+      , dataType : 'json'
+      , success :function(){
+        window.location.replace("http://" + window.location.hostname +
+          ((location.port==""||location.port==undefined)?"":":" + location.port) + "/footballMaster/mypage");
+      }
+});
+
+
+
+매치 취소
+
+var matches_id = 해당 매치의 id값
+
+$.ajax({
+      beforeSend: function (request)
+        {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
+      url:'http://localhost:8081/footballMaster/cancle/' + matches_id
+      , method : 'POST'
+      , contentType : 'application/json; charset=UTF-8'
+      , dataType : 'json'
+      , success :function(){
+        window.location.replace("http://" + window.location.hostname +
+          ((location.port==""||location.port==undefined)?"":":" + location.port) + "/footballMaster/mypage");
+      }
+});
+
+
+레벨별 매치정보 가져오기
+
+var level = 선택된 레벨 정보;
+
+$.ajax({
+      dataType: "json",
+      url: "http://localhost:8081/footballMaster/level/"+level+"/matches",
+      method : 'GET',
+      contentType : 'application/json; charset=UTF-8',
+      success: function(result) {
+        매치필터 뿌려줬던것처럼 똑같이 해주면댐
+      }
+});
+
+
+성별별 매치정보 가져오기
+
+var gender = 선택된 성별 정보;
+
+$.ajax({
+      dataType: "json",
+      url: "http://localhost:8081/footballMaster/gender/"+gender+"/matches",
+      method : 'GET',
+      contentType : 'application/json; charset=UTF-8',
+      success: function(result) {
+        매치필터 뿌려줬던것처럼 똑같이 해주면댐
+      }
+});
+
+
+
+지역별 매치정보 가져오기
+
+var region = 선택된 지역 정보;
+
+$.ajax({
+      dataType: "json",
+      url: "http://localhost:8081/footballMaster/region/"+region+"/matches",
+      method : 'GET',
+      contentType : 'application/json; charset=UTF-8',
+      success: function(result) {
+        매치필터 뿌려줬던것처럼 똑같이 해주면댐
+      }
+});

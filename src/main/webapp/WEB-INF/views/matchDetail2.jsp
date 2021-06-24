@@ -197,7 +197,7 @@
                                         <img src="https://plab-football.s3.amazonaws.com/static/img/ic_parking_pay.svg"
                                             alt="유료주차">
                                         <span class="txt2">유료주차</span>
-                                        <p style="font-size: 11px;">해 주차장 이용, 사전 등록자 3시간 무료</p>
+                                        <p style="font-size: 11px;">주차장 이용, 사전 등록자 3시간 무료</p>
 
 
                                     </li>
