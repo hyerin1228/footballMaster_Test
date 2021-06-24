@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-    <%@include file='includes/header.jsp' %>
     
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.8/dist/vue.js"></script>
     <style>
@@ -16,7 +15,6 @@
             clear: both;
             margin: 0 auto;
             max-width: 1024px;
-            height: 100%;
             padding: 0 0px;
             background: white;
         }
@@ -90,7 +88,7 @@
            }
            }
         .card-container{
-           padding: 50px;
+           padding: 30px;
            background: white;
            margin-bottom: 20px; 
            
@@ -108,9 +106,11 @@
         .card-more{
             font-size: 12px;
         }
+        /**
         .card-body{
             padding: 20px;
         }
+        **/
         .my-menu-title{
             padding: 10px 0;
             display: flex;
@@ -124,6 +124,7 @@
 
  <!-- MY hero -->
     <div id="myPage">
+    <%@include file='includes/header.jsp' %>
         <div class="my--hero">
             <div class="my--hero--hi">
             <h2>안녕하세요<br><strong id="userName">${output.name}</strong></h2>
@@ -135,8 +136,7 @@
                     <div class="btn-right">
                     	<img src="http://localhost:8080/footballMaster/assets/img/icon/ic_charge.svg">
                         <a href="http://localhost:8080/footballMaster/mypage/cash/charge">
-                            <button class="button"> 캐시충전</a>
-                            </button>
+                            <button class="button"> 캐시충전</button></a>
                    </div>
                 </div>
               <div class="my--hero--status" style="padding-bottom: 20px;" >
@@ -180,7 +180,7 @@
             <div class="card-body">
                 <div class="card-menu">
                     <ul>
-                    <li><a href="충전내역"><div class="my-menu-title"><p>충전내역-x피그마 레이아웃-위로옮겨야됨</p></div></a></li>
+                    <li class="my-menu-title"><a href="충전내역">충전내역-x피그마 레이아웃-위로옮겨야됨</a></li>
                     <li><a href="http://localhost:8080/footballMaster/mypage/change"><div class="my-menu-title"><p>회원정보수정-o피그마 레이아웃-위로옮겨야됨</p></div></a></li>
                     <li id="logout"><a href="logout"><div class="my-menu-title"><p>로그아웃-(ox)피그마 레이아웃-위로옮겨야됨</p></div></a></li>
                     </ul>
@@ -188,6 +188,9 @@
             </div>
         
     </div>
+    </div>
+     <!-- footer -->
+            <%@include file='includes/footer.jsp' %>
     </div>
     <!-- my page -->
     
@@ -199,17 +202,19 @@
 	var userBalanceTag = document.getElementById("userBalance");  // 캐시 보유액
 	var userFairPonintTag = document.getElementById("UserFairPonint");  // 페어포인트
 	
-	
     $.ajax({
-      crossOrigin: true,
+      beforeSend: function (request)
+        {
+            request.setRequestHeader("accessToken", getCookie("accessToken"));
+        },
 	  dataType: "json",
-      url: "http://localhost:8081/footballMaster/user",
-      data: {
-    	'email' : 'asdf@naver.com'
-      },
-      success: function(data) {
+      url: "http://localhost:8081/footballMaster/my",
+      method : 'GET',
+      contentType : 'application/json; charset=UTF-8',
+      dataType : 'json',
+      success: function(result) {
     	// data = email에 해당하는 유저정보
-        result = data;
+
         console.log(result);
         console.log("유저이름:" + result.name +", 캐시:" + result.balance + ", 페어포인트:" + result.fair_point);
         // 유저에 해당하는 내용 적용시키기(이름,캐시보유액)
@@ -228,5 +233,4 @@
 
 
     
-            <!-- footer -->
-            <%@include file='includes/footer.jsp' %>
+           

@@ -98,9 +98,9 @@
                     <div class="top--menu" id="userMenu" style="float:right;">
                     	<div class="mainTab">
 	                        <div class="goIn">
-	                            <a id="loginModalBtn" onclick="loginModal_Click();">로그인</a>
+	                            <a id="loginModalBtn">로그인</a>
 	                            <span>또는</span>
-	                            <a>회원가입</a>
+	                            <a id="loginModalBtn">회원가입</a>
 	                        </div>
                     	</div>
 
@@ -124,11 +124,44 @@
                     <h2>풋살하고 싶을 땐 <strong>플랩풋볼</strong></h2>
                 </div>
                 <div class="modalBtnWrap">
-                    <div style="cursor:pointer" onclick="pressedLoginKakao();" class="btn registKS">카카오 계정으로 로그인</div>
-                    <a href="/accounts/login/?next=/" class="btn regist">아이디 또는 이메일로 로그인</a>
+                            <div id="naverIdLogin"></div>
                 </div>
             </div>
         </div>
+<script type="text/javascript" src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+<script type="text/javascript">
 
+//login modal 열기
+loginModalOpen = document.getElementById("modalLoginOpen");
+// 1. 모달 열기 버튼
+loginModalOpenBtn = document.getElementById("loginModalBtn");
+
+// 1. 모달 열기
+loginModalOpenBtn.onclick = () => {
+    console.log("loginmodal clicked");
+    //loginModalOpen.style.display = "none";
+    $("#modalLoginOpen").css("display", "flex");
+    $("#modalLoginOpen").css("max-width", "none");
+    // $(".modal").css("max-width", "none");
+};
+
+  	var naverLogin = new naver.LoginWithNaverId(
+  			{
+  				clientId: "fVWpyHFN5yLxAUXa4chY",
+  				callbackUrl: "http://localhost:8080/footballMaster/naver_callback",
+  				isPopup: false, /* 팝업을 통한 연동처리 여부 */
+  				loginButton: {color: "green", type: 3, height:85} /* 로그인 버튼의 타입을 지정 */
+  			}
+  		);
+  		
+  	/* 설정정보를 초기화하고 연동을 준비 */
+  	naverLogin.init();
+  	
+  	var getCookie = function(name) {
+        var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return value? value[2] : null;
+    };
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"
         integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+        
