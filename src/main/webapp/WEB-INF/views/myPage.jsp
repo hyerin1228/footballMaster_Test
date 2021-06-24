@@ -225,6 +225,30 @@
       error:function(request, status, error){ console.log("실패");
       }
     });
+	
+    function deleteCookie(name) {
+    	  setCookie(name, "", {
+    	    'max-age': -1
+    	 })
+    }
+    
+    function logout(){
+    	
+    	$.ajax({
+    	      dataType: "json",
+    	      url: "http://localhost:8081/footballMaster/logout",
+    	      method : 'POST',
+    	      contentType : 'application/json; charset=UTF-8',
+    	      dataType : 'json',
+    	      success: function(result) {
+    	    	  deleteCookie("accessToken");
+    	      }, complete : function() {
+		        	window.location.replace("http://" + window.location.hostname + 
+                            ( (location.port==""||location.port==undefined)?"":":" + location.port) + "/footballMaster/matches");
+		       }
+    	});
+    	
+    }
       
       
       
